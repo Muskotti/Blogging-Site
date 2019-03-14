@@ -14,18 +14,21 @@ public class BlogPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    private String title;
 
     private String author;
+
+    private String content;
 
     private Timestamp time;
 
     public BlogPost() {
     }
 
-    public BlogPost(String content, String author, Timestamp time) {
-        this.content = content;
+    public BlogPost(String title, String author, String content, Timestamp time) {
+        this.title = title;
         this.author = author;
+        this.content = content;
         this.time = time;
     }
 
@@ -59,5 +62,13 @@ public class BlogPost {
 
     public Long getId() {
         return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

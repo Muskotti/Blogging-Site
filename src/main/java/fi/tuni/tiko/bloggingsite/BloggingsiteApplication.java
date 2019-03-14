@@ -20,6 +20,10 @@ public class BloggingsiteApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		postRepository.save(new BlogPost("Test text", "Test Author", new Timestamp(System.currentTimeMillis())));
+		postRepository.save(new BlogPost(
+				"Test Title",
+				"Test Author",
+				"Test Blog post",
+				new Timestamp(System.currentTimeMillis())));
 	}
 }
