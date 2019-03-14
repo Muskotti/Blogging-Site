@@ -1,5 +1,6 @@
 package fi.tuni.tiko.bloggingsite;
 
+import fi.tuni.tiko.bloggingsite.exceptions.BlogPostIdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ public class Controller {
 
     //TODO Create exception if post can't be found by provided id.
     @GetMapping("/posts/{id}")
-    public BlogPost findPostById(@PathVariable Long id) {
+    public BlogPost findPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         return findPostByIdHelper(id);
     }
 
@@ -43,15 +44,13 @@ public class Controller {
         return null;
     }
 
-    private BlogPost findPostByIdHelper(Long id) {
+    private BlogPost findPostByIdHelper(Long id) throws BlogPostIdNotFoundException{
         Optional<BlogPost> post = postRepository.findById(id);
 
         if (post.isPresent()) {
             return post.get();
         } else {
-
+            throw new BlogPostIdNotFoundException(id);
         }
-
-        return null;
     }
 }
