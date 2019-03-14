@@ -21,13 +21,13 @@ export default class LoggingDialogs extends PureComponent {
 
     return (
       <div>
-        <Button flat secondary swapTheming onClick={this.show}>Logging</Button>
+        <Button flat secondary swapTheming onClick={this.show}>Sign In</Button>
         <DialogContainer
             id="simple-action-dialog"
             visible={visible}
             onHide={this.hide}
             actions={actions}
-            title="Logging"
+            title="Sign In"
         >
           <TextField
               id="Username"
