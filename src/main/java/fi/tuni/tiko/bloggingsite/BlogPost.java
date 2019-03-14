@@ -3,7 +3,6 @@ package fi.tuni.tiko.bloggingsite;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
@@ -16,11 +15,11 @@ public class BlogPost {
 
     private String author;
 
-    private Timestamp date;
+    private Timestamp time;
 
-    public BlogPost(String postText, String author, Timestamp date) {
+    public BlogPost(String postText, String author, Timestamp time) {
         this.postText = postText;
         this.author = author;
-        this.date = date;
+        this.time = time;
     }
 }
