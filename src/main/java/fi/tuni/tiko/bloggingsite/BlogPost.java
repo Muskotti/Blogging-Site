@@ -2,6 +2,7 @@ package fi.tuni.tiko.bloggingsite;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
@@ -10,7 +11,7 @@ import java.sql.Timestamp;
 @Table(name = "posts")
 public class BlogPost {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String postText;
@@ -54,5 +55,9 @@ public class BlogPost {
 
     public void setTime(long millis) {
         setTime(new Timestamp(millis));
+    }
+
+    public Long getId() {
+        return id;
     }
 }
