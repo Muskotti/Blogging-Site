@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 public class BlogPost {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     private String postText;
 
