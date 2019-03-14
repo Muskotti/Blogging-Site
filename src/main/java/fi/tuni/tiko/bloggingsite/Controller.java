@@ -17,6 +17,9 @@ public class Controller {
     @Autowired
     BlogPostRepository postRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
     @GetMapping("/hello")
     public String hello() {
         return "Hello, the time at the server is now " + new Date() + "\n";
@@ -32,16 +35,18 @@ public class Controller {
         return postRepository.findAll();
     }
 
-    //TODO Create exception if post can't be found by provided id.
     @GetMapping("/posts/{id}")
     public BlogPost findPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         return findPostByIdHelper(id);
     }
 
+    @PostMapping("posts/{id}/comment")
     public Comment saveCommentToBlogPostByPostId(
             @PathVariable Long id,
-            @RequestBody Comment comment) {
-        return null;
+            @RequestBody Comment comment) throws BlogPostIdNotFoundException {
+        BlogPost post = findPostByIdHelper(id);
+        comment.setPost(post);
+        return commentRepository.save(comment);
     }
 
     private BlogPost findPostByIdHelper(Long id) throws BlogPostIdNotFoundException{
