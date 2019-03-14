@@ -11,7 +11,7 @@ const CardsTest = () => (
                 Here is some interesting text.
             </p>
             <CardActions>
-                <Button icon primary>favorite</Button>
+                <Button icon secondary>favorite</Button>
                 <Button flat>Comment</Button>
             </CardActions>
         </CardText>
