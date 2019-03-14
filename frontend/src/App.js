@@ -1,43 +1,27 @@
 import React, { Component } from 'react';
-import { NavigationDrawer } from 'react-md';
-import logo from './logo.svg';
+import {Toolbar} from 'react-md';
 import './App.scss';
 
+import KebabMenu from './common/KebabMenu';
+import CardsTest from './common/CardsTest'
+
 class App extends Component {
-    state = {};
-
-    componentDidMount() {
-        setInterval(this.hello, 250);
-    }
-
-    hello = () => {
-        fetch('/hello')
-            .then(response => response.text())
-            .then(message => {
-                this.setState({message: message});
-            });
-    };
-
     render() {
         return (
-            <NavigationDrawer
-                toolbarTitle="react-md with create-react-app v2"
-                drawerTitle="react-app"
-            >
+            <div className="App">
+                <Toolbar
+                    themed
+                    title="Blogging site"
+                    actions={<KebabMenu id="toolbar-themed-kebab-menu" />}
+                />
                 <div className="App">
-                    <header className="App-header">
-                        <div className="App">
-                            <header className="App-header">
-                                <img src={logo} className="App-logo" alt="logo"/>
-                                <h1 className="App-title">{this.state.message}</h1>
-                            </header>
-                            <p className="App-intro">
-                                To get started, edit <code>src/App.js</code> and save to reload.
-                            </p>
-                        </div>
-                    </header>
+                    <CardsTest/>
+                    <button id="theme-builder-preview-floating-btn" type="button"
+                            className="md-btn md-btn--icon md-btn--floating md-btn--fixed md-btn--fixed-br md-pointer--hover md-paper md-paper--2 md-background--secondary md-background--secondary-hover md-inline-block">
+                        <div className="md-ink-container"></div>
+                        <i className="md-icon material-icons md-text--inherit">email</i></button>
                 </div>
-            </NavigationDrawer>
+            </div>
         );
     }
 }
