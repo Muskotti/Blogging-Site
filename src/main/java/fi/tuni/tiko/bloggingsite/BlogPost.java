@@ -49,4 +49,8 @@ public class BlogPost {
     public void setTime(Timestamp time) {
         this.time = time;
     }
+
+    public void setTime(long millis) {
+        setTime(new Timestamp(millis));
+    }
 }
