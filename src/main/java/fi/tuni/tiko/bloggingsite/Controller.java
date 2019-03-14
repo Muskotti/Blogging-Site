@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -40,13 +39,18 @@ public class Controller {
         return findPostByIdHelper(id);
     }
 
-    @PostMapping("posts/{id}/comment")
+    @PostMapping("/posts/{id}/comment")
     public Comment saveCommentToBlogPostByPostId(
             @PathVariable Long id,
             @RequestBody Comment comment) throws BlogPostIdNotFoundException {
         BlogPost post = findPostByIdHelper(id);
         comment.setPost(post);
         return commentRepository.save(comment);
+    }
+
+    @GetMapping("/posts/{id}/comments")
+    public Iterable<Comment> findCommentsByPostId(@PathVariable Long id) {
+        return commentRepository.findAllByPostId(id);
     }
 
     private BlogPost findPostByIdHelper(Long id) throws BlogPostIdNotFoundException{
