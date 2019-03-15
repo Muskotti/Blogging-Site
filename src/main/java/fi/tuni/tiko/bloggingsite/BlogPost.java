@@ -22,6 +22,8 @@ public class BlogPost {
 
     private Timestamp time;
 
+    private Integer likes = 0;
+
     public BlogPost() {
     }
 
@@ -70,5 +72,13 @@ public class BlogPost {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void incrementLikes() {
+        likes++;
     }
 }

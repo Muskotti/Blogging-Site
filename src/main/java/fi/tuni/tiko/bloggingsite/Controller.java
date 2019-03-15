@@ -104,9 +104,18 @@ public class Controller {
         }
     }
 
+    @PostMapping("posts/{id}/like")
+    public Resource<BlogPost> likeBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
+        BlogPost post = findBlogPostById(id).getContent();
+        post.incrementLikes();
+        return createBlogPostResource(postRepository.save(post));
+    }
+
     private static Resource<BlogPost> createBlogPostResource(BlogPost post) {
-        Link postLink = linkTo(methodOn(Controller.class).findBlogPostById(post.getId())).withSelfRel();
-        return new Resource<>(post, postLink);
+        Link selfRel = linkTo(methodOn(Controller.class).findBlogPostById(post.getId())).withSelfRel();
+        Link comments = linkTo(methodOn(Controller.class).findCommentsByPostId(post.getId())).withRel("comments");
+        Link like = linkTo(methodOn(Controller.class).likeBlogPostById(post.getId())).withRel("like");
+        return new Resource<>(post, selfRel, comments, like);
     }
 
     private static Resource<Comment> createCommentResource(Comment comment) {
