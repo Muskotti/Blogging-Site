@@ -21,9 +21,7 @@ class App extends Component {
                     <div className="md-grid">
                         <NewBlogPost/>
                     </div>
-                <div>
-                    {<BlogPosts/>}
-                </div>
+                {<BlogPosts/>}
             </div>
         );
     }
