@@ -6,6 +6,13 @@ import CardsTest from './common/CardsTest'
 import LoggingDialogs from "./common/LoggingDialogs";
 import Search from "./common/Search"
 import NewBlogPost from "./common/NewBlogPost"
+import testi from "./testi"
+
+import {
+    Route,
+    BrowserRouter,
+    NavLink
+} from "react-router-dom";
 
 class App extends Component {
     render() {
@@ -17,10 +24,16 @@ class App extends Component {
                     children={<Search/>}
                     actions={<LoggingDialogs/>}
                 />
-                <div className="md-grid">
-                    <CardsTest/>
-                    <NewBlogPost/>
-                </div>
+                    <div className="md-grid">
+                        <CardsTest/>
+                        <NewBlogPost/>
+                    </div>
+                <BrowserRouter>
+                    <div>
+                        <NavLink to="/testi">Home</NavLink>
+                        <Route path={"/testi"} component={testi}/>
+                    </div>
+                </BrowserRouter>
             </div>
         );
     }
