@@ -50,4 +50,8 @@ public class Comment {
     public void setPost(BlogPost post) {
         this.post = post;
     }
+
+    public Long getId() {
+        return id;
+    }
 }
