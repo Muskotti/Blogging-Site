@@ -9,7 +9,7 @@ export default class Search extends PureComponent {
                     id="floating-center-title"
                     lineDirection="center"
                     placeholder={"Search"}
-                    resize={{min: 640}}
+                    resize={{min: 640, max: 1000}}
                     leftIcon={<FontIcon>search</FontIcon>}
                     className="md-cell md-cell--bottom "
                 />
