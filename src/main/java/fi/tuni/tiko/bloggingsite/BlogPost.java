@@ -22,7 +22,7 @@ public class BlogPost {
 
     private Timestamp time;
 
-    private Integer likes;
+    private Integer likes = 0;
 
     public BlogPost() {
     }
@@ -32,7 +32,6 @@ public class BlogPost {
         this.author = author;
         this.content = content;
         this.time = time;
-        likes = new Integer(0);
     }
 
     public String getContent() {
