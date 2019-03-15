@@ -1,6 +1,30 @@
 [
   {
-    "name": "Test command",
-    "command": "Do things"
+    "name": "GET all blog posts",
+    "command": "curl --request GET --url http://localhost:8080/posts"
+  },
+  {
+    "name": "POST a blog post",
+    "command":"curl --request POST --url http://localhost:8080/post --header \"content-type: application/json\" --data \"{\\\"title\\\": \\\"My Title\\\",\\\"author\\\": \\\"Author Man\\\",\\\"content\\\": \\\"I think people should have more respect for balls. Balls are the essence of being human, like playing base ball, foot ball, ball ball, whatever.\\\",\\\"time\\\": 1552595224163}\\\""
+  },
+  {
+    "name": "GET a blog post by id 1",
+    "command": "curl --request GET --url http://localhost:8080/posts/1"
+  },
+  {
+    "name": "POST comment to blog post with id 1",
+    "command": "curl --request POST --url http://localhost:8080/posts/1/comment --header \"content-type: application/json\" --data \"{\\\"text\\\":\\\"This blog post suck my ding dong\\\"}\\\""
+  },
+  {
+    "name": "GET all comments from blog post with id 1",
+    "command": "curl --request GET --url http://localhost:8080/posts/1/comments"
+  },
+  {
+    "name": "GET comment by post id 1 and comment id 1",
+    "command": "curl --request GET --url http://localhost:8080/posts/1/comments/1"
+  },
+  {
+    "name": "POST like to blog post with id 1",
+    "command": "curl --request POST --url http://localhost:8080/posts/1/like"
   }
 ]
