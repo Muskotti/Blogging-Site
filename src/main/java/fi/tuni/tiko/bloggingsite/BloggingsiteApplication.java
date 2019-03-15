@@ -21,6 +21,9 @@ public class BloggingsiteApplication implements CommandLineRunner {
 	@Autowired
 	BlogPostRepository postRepository;
 
+	@Autowired
+	CommentRepository commentRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(BloggingsiteApplication.class, args);
 	}
@@ -49,10 +52,26 @@ public class BloggingsiteApplication implements CommandLineRunner {
 	}
 
 	private void createSampleData() {
-		postRepository.save(new BlogPost(
+		BlogPost post1 = postRepository.save(new BlogPost(
 				"Test Title",
 				"Test Author",
 				"Test Blog post",
 				new Timestamp(System.currentTimeMillis())));
+		Comment comment1 = new Comment();
+		comment1.setText("This is a comment");
+		comment1.setPost(post1);
+		commentRepository.save(comment1);
+
+		postRepository.save(new BlogPost(
+				"Kill all humans",
+				"Hüman killing guy",
+				"We should kill all humans now. Humans have destroyed this planet",
+				new Timestamp(System.currentTimeMillis() - 300)));
+
+		postRepository.save(new BlogPost(
+				"Respecc erths creaturs",
+				"Peace loving hippie",
+				"Every person on this earth is as valuable as the next.",
+				new Timestamp(System.currentTimeMillis() - 300)));
 	}
 }
