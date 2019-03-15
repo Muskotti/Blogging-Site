@@ -6,7 +6,7 @@ export default class CardsTest extends PureComponent {
         const style = { minWidth: 500, maxWidth: 640, marginBottom: 20};
         return (
                 <Card style={style} className="md-block-centered">
-                    <CardTitle title={this.props.title} subtitle={this.props.author}/>
+                    <CardTitle title={this.props.title} subtitle={"By: " + this.props.author}/>
                     <CardText style={{textAlign: 'left'}}>
                         <p>{this.props.content}</p>
                         <CardActions expander>
