@@ -1,7 +1,7 @@
 import {Card, CardText, CardTitle, CardActions, Button} from "react-md";
 import React from "react";
 
-const style = { minWidth: 640, maxWidth: 1000};
+const style = { minWidth: 500, maxWidth: 640};
 
 const CardsTest = () => (
     <Card style={style} className="md-block-centered">

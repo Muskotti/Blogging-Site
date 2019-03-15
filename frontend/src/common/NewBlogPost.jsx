@@ -55,6 +55,7 @@ export default class NewBlogPost extends PureComponent {
                     onHide={this.hide}
                     actions={actions}
                     title="New Blog Post"
+                    width={500}
                 >
                     <TextField
                         id="title"
