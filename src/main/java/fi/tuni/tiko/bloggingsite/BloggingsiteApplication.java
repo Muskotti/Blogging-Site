@@ -32,10 +32,12 @@ public class BloggingsiteApplication implements CommandLineRunner {
 	}
 
 	private void printCurlCommands(JSONArray commandArray) {
+		final String ANSI_PURPLE = "\u001B[35m";
+		final String ANSI_RESET = "\u001B[0m";
 		System.out.println("CURL COMMANDS:");
 		for (int i = 0; i < commandArray.length(); i++) {
 			JSONObject commandObject = commandArray.getJSONObject(i);
-			System.out.println(commandObject.getString("name") + ':');
+			System.out.println(ANSI_PURPLE + commandObject.getString("name") + ':' + ANSI_RESET);
 			System.out.println(commandObject.getString("command"));
 		}
 	}
