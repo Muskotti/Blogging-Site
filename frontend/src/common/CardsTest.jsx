@@ -18,7 +18,7 @@ export default class CardsTest extends PureComponent {
                     <CardText style={{textAlign: 'left'}}>
                         <p>{this.props.content}</p>
                         <CardActions expander>
-                            <Button icon secondary swapTheming>favorite</Button>
+                            <Button icon secondary swapTheming onClick={this.props.likeAction}>favorite</Button>
                             <Button flat>Comment</Button>
                         </CardActions>
                     </CardText>
