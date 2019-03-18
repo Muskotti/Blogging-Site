@@ -1,19 +1,15 @@
 package fi.tuni.tiko.bloggingsite;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
-import java.io.Reader;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 public class BloggingsiteApplication implements CommandLineRunner {
@@ -31,24 +27,30 @@ public class BloggingsiteApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		createSampleData();
-		printCurlCommands(getCurlCommandJson());
-	}
 
-	private void printCurlCommands(JSONArray commandArray) {
-		final String ANSI_PURPLE = "\u001B[35m";
-		final String ANSI_RESET = "\u001B[0m";
-		System.out.println("CURL COMMANDS:");
-		for (int i = 0; i < commandArray.length(); i++) {
-			JSONObject commandObject = commandArray.getJSONObject(i);
-			System.out.println(ANSI_PURPLE + commandObject.getString("name") + ':' + ANSI_RESET);
-			System.out.println(commandObject.getString("command"));
+		try {
+			printCurlCommands(getCurlCommands());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Curl commands could not be printed");
 		}
 	}
 
-	private JSONArray getCurlCommandJson() {
-		final String jsonFileName = "curl_commands.json";
-		return new JSONArray(new JSONTokener(
-				getClass().getClassLoader().getResourceAsStream(jsonFileName)));
+	private void printCurlCommands(List<CurlCommand> curlCommands) {
+		final String ANSI_PURPLE = "\u001B[35m";
+		final String ANSI_RESET = "\u001B[0m";
+		System.out.println("CURL COMMANDS:");
+
+		for (CurlCommand curlCommand : curlCommands) {
+			System.out.println(ANSI_PURPLE + curlCommand.getName() + ANSI_RESET);
+			System.out.println(curlCommand.getCommand());
+		}
+	}
+
+	private List<CurlCommand> getCurlCommands() throws Exception {
+		final String resourceFileName = "curl_commands.json";
+		InputStream resourceStream = getClass().getClassLoader().getResourceAsStream(resourceFileName);
+		return Arrays.asList(new ObjectMapper().readValue(resourceStream, CurlCommand[].class));
 	}
 
 	private void createSampleData() {
