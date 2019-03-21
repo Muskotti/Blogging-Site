@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-public class Controller {
+public class BlogPostController {
     @Autowired
     BlogPostRepository postRepository;
 
@@ -38,8 +37,8 @@ public class Controller {
     @PostMapping("/post")
     public Resource<BlogPost> saveBlogPost(@RequestBody BlogPost post) {
         BlogPost createdPost = postRepository.save(post);
-        Link selfRel = linkTo(methodOn(Controller.class).saveBlogPost(post)).withSelfRel();
-        Link createdRel = linkTo(methodOn(Controller.class).findBlogPostById(createdPost.getId())).withRel("createdBlogPost");
+        Link selfRel = linkTo(methodOn(BlogPostController.class).saveBlogPost(post)).withSelfRel();
+        Link createdRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(createdPost.getId())).withRel("createdBlogPost");
 
         return new Resource<>(createdPost, selfRel, createdRel);
     }
@@ -51,8 +50,8 @@ public class Controller {
         postIterable.forEach(postList::add);
 
         List<Resource<BlogPost>> postResources =
-                postList.stream().map(Controller::createBlogPostResource).collect(Collectors.toList());
-        Link selfRel = linkTo(methodOn(Controller.class).findAllBlogPosts()).withSelfRel();
+                postList.stream().map(BlogPostController::createBlogPostResource).collect(Collectors.toList());
+        Link selfRel = linkTo(methodOn(BlogPostController.class).findAllBlogPosts()).withSelfRel();
 
         return new Resources<>(postResources, selfRel);
     }
@@ -76,7 +75,7 @@ public class Controller {
         comment.setPost(post);
         Comment createdComment = commentRepository.save(comment);
 
-        Link selfRel = linkTo(methodOn(Controller.class).saveCommentToBlogPostByPostId(id, comment)).withSelfRel();
+        Link selfRel = linkTo(methodOn(BlogPostController.class).saveCommentToBlogPostByPostId(id, comment)).withSelfRel();
 
         return new Resource<>(createdComment, selfRel);
     }
@@ -88,8 +87,8 @@ public class Controller {
         commentIterable.forEach(commentList::add);
 
         List<Resource<Comment>> commentResources =
-                commentList.stream().map(Controller::createCommentResource).collect(Collectors.toList());
-        Link selfRel = linkTo(methodOn(Controller.class).findBlogPostById(id)).withSelfRel();
+                commentList.stream().map(BlogPostController::createCommentResource).collect(Collectors.toList());
+        Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(id)).withSelfRel();
 
         return new Resources<>(commentResources, selfRel);
     }
@@ -119,16 +118,16 @@ public class Controller {
     }
 
     private static Resource<BlogPost> createBlogPostResource(BlogPost post) {
-        Link selfRel = linkTo(methodOn(Controller.class).findBlogPostById(post.getId())).withSelfRel();
-        Link comments = linkTo(methodOn(Controller.class).findCommentsByPostId(post.getId())).withRel("comments");
-        Link like = linkTo(methodOn(Controller.class).likeBlogPostById(post.getId())).withRel("like");
+        Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(post.getId())).withSelfRel();
+        Link comments = linkTo(methodOn(BlogPostController.class).findCommentsByPostId(post.getId())).withRel("comments");
+        Link like = linkTo(methodOn(BlogPostController.class).likeBlogPostById(post.getId())).withRel("like");
         return new Resource<>(post, selfRel, comments, like);
     }
 
     private static Resource<Comment> createCommentResource(Comment comment) {
-        Link selfRel = linkTo(methodOn(Controller.class).
+        Link selfRel = linkTo(methodOn(BlogPostController.class).
                 findCommentsByIdAndByPostId(comment.getId(), comment.getPost().getId())).withSelfRel();
-        Link relatedPost = linkTo(methodOn(Controller.class).
+        Link relatedPost = linkTo(methodOn(BlogPostController.class).
                 findBlogPostById(comment.getPost().getId())).withRel("relatedPost");
         return new Resource<>(comment, selfRel, relatedPost);
     }
