@@ -1,5 +1,6 @@
 package fi.tuni.tiko.bloggingsite.blogpost;
 
+import fi.tuni.tiko.bloggingsite.ResourceCreator;
 import fi.tuni.tiko.bloggingsite.comment.Comment;
 import fi.tuni.tiko.bloggingsite.comment.CommentRepository;
 import fi.tuni.tiko.bloggingsite.exceptions.BlogPostIdNotFoundException;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import static fi.tuni.tiko.bloggingsite.ResourceCreator.createBlogPostResource;
+import static fi.tuni.tiko.bloggingsite.ResourceCreator.createCommentResource;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -52,7 +56,7 @@ public class BlogPostController {
         postIterable.forEach(postList::add);
 
         List<Resource<BlogPost>> postResources =
-                postList.stream().map(BlogPostController::createBlogPostResource).collect(Collectors.toList());
+                postList.stream().map(ResourceCreator::createBlogPostResource).collect(Collectors.toList());
         Link selfRel = linkTo(methodOn(BlogPostController.class).findAllBlogPosts()).withSelfRel();
 
         return new Resources<>(postResources, selfRel);
@@ -89,7 +93,7 @@ public class BlogPostController {
         commentIterable.forEach(commentList::add);
 
         List<Resource<Comment>> commentResources =
-                commentList.stream().map(BlogPostController::createCommentResource).collect(Collectors.toList());
+                commentList.stream().map(ResourceCreator::createCommentResource).collect(Collectors.toList());
         Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(id)).withSelfRel();
 
         return new Resources<>(commentResources, selfRel);
@@ -117,20 +121,5 @@ public class BlogPostController {
     public void deleteBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         BlogPost post = findBlogPostById(id).getContent();
         postRepository.delete(post);
-    }
-
-    private static Resource<BlogPost> createBlogPostResource(BlogPost post) {
-        Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(post.getId())).withSelfRel();
-        Link comments = linkTo(methodOn(BlogPostController.class).findCommentsByPostId(post.getId())).withRel("comments");
-        Link like = linkTo(methodOn(BlogPostController.class).likeBlogPostById(post.getId())).withRel("like");
-        return new Resource<>(post, selfRel, comments, like);
-    }
-
-    private static Resource<Comment> createCommentResource(Comment comment) {
-        Link selfRel = linkTo(methodOn(BlogPostController.class).
-                findCommentsByIdAndByPostId(comment.getId(), comment.getPost().getId())).withSelfRel();
-        Link relatedPost = linkTo(methodOn(BlogPostController.class).
-                findBlogPostById(comment.getPost().getId())).withRel("relatedPost");
-        return new Resource<>(comment, selfRel, relatedPost);
     }
 }
