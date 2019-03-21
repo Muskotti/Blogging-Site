@@ -1,4 +1,4 @@
-package fi.tuni.tiko.bloggingsite;
+package fi.tuni.tiko.bloggingsite.blogpost;
 
 import org.springframework.data.repository.CrudRepository;
 

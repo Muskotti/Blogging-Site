@@ -1,4 +1,4 @@
-package fi.tuni.tiko.bloggingsite;
+package fi.tuni.tiko.bloggingsite.blogpost;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -80,5 +80,11 @@ public class BlogPost {
 
     public void incrementLikes() {
         likes++;
+    }
+
+    public void decrementLikes() {
+        if (likes > 0) {
+            likes--;
+        }
     }
 }
