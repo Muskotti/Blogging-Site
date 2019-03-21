@@ -73,43 +73,6 @@ public class BlogPostController {
         }
     }
 
-    @PostMapping("/posts/{id}/comment")
-    public Resource<Comment> saveCommentToBlogPostByPostId(
-            @PathVariable Long id,
-            @RequestBody Comment comment) throws BlogPostIdNotFoundException {
-        BlogPost post = findBlogPostById(id).getContent();
-        comment.setPost(post);
-        Comment createdComment = commentRepository.save(comment);
-
-        Link selfRel = linkTo(methodOn(BlogPostController.class).saveCommentToBlogPostByPostId(id, comment)).withSelfRel();
-
-        return new Resource<>(createdComment, selfRel);
-    }
-
-    @GetMapping("/posts/{id}/comments")
-    public Resources<Resource<Comment>> findCommentsByPostId(@PathVariable Long id) {
-        Iterable<Comment> commentIterable = commentRepository.findAllByPostId(id);
-        List<Comment> commentList = new ArrayList<>();
-        commentIterable.forEach(commentList::add);
-
-        List<Resource<Comment>> commentResources =
-                commentList.stream().map(ResourceCreator::createCommentResource).collect(Collectors.toList());
-        Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(id)).withSelfRel();
-
-        return new Resources<>(commentResources, selfRel);
-    }
-
-    @GetMapping("posts/{postId}/comments/{commentId}")
-    public Resource<Comment> findCommentsByIdAndByPostId(@PathVariable Long postId, @PathVariable Long commentId) {
-        Optional<Comment> comment = commentRepository.findByIdAndAndPostId(commentId, postId);
-
-        if (comment.isPresent()) {
-            return createCommentResource(comment.get());
-        } else {
-            throw new CommentNotFoundException(commentId);
-        }
-    }
-
     @PostMapping("posts/{id}/like")
     public Resource<BlogPost> likeBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         BlogPost post = findBlogPostById(id).getContent();
