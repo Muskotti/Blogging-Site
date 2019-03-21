@@ -7,6 +7,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -109,6 +110,12 @@ public class Controller {
         BlogPost post = findBlogPostById(id).getContent();
         post.incrementLikes();
         return createBlogPostResource(postRepository.save(post));
+    }
+
+    @DeleteMapping("posts/{id}/delete")
+    public void deleteBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
+        BlogPost post = findBlogPostById(id).getContent();
+        postRepository.delete(post);
     }
 
     private static Resource<BlogPost> createBlogPostResource(BlogPost post) {
