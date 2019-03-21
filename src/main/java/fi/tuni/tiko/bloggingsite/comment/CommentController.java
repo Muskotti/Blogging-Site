@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/posts/{postId}")
 public class CommentController {
 
     @Autowired
@@ -34,9 +36,9 @@ public class CommentController {
     @Autowired
     BlogPostController blogPostController;
 
-    @PostMapping("/posts/{id}/comment")
+    @PostMapping("/comment")
     public Resource<Comment> saveCommentToBlogPostByPostId(
-            @PathVariable Long id,
+            @PathVariable(name = "postId") Long id,
             @RequestBody Comment comment) throws BlogPostIdNotFoundException {
         BlogPost post = blogPostController.findBlogPostById(id).getContent();
         comment.setPost(post);
@@ -47,8 +49,9 @@ public class CommentController {
         return new Resource<>(createdComment, selfRel);
     }
 
-    @GetMapping("/posts/{id}/comments")
-    public Resources<Resource<Comment>> findCommentsByPostId(@PathVariable Long id) {
+    @GetMapping("/comments")
+    public Resources<Resource<Comment>> findCommentsByPostId(
+            @PathVariable(name = "postId") Long id) {
         Iterable<Comment> commentIterable = commentRepository.findAllByPostId(id);
         List<Comment> commentList = new ArrayList<>();
         commentIterable.forEach(commentList::add);
@@ -60,8 +63,10 @@ public class CommentController {
         return new Resources<>(commentResources, selfRel);
     }
 
-    @GetMapping("posts/{postId}/comments/{commentId}")
-    public Resource<Comment> findCommentsByIdAndByPostId(@PathVariable Long postId, @PathVariable Long commentId) {
+    @GetMapping("/comments/{commentId}")
+    public Resource<Comment> findCommentsByIdAndByPostId(
+            @PathVariable(name = "postId") Long postId,
+            @PathVariable Long commentId) throws CommentNotFoundException{
         Optional<Comment> comment = commentRepository.findByIdAndAndPostId(commentId, postId);
 
         if (comment.isPresent()) {
