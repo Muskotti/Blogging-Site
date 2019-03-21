@@ -22,6 +22,7 @@ export default class BlogPosts extends PureComponent {
             this.state && this.state.data && this.state.data.map((item) =>
                 <div key={item.id}>
                     <CardsTest
+                        id={item.id}
                         title={item.title}
                         author={item.author}
                         content={item.content}
@@ -36,10 +37,10 @@ export default class BlogPosts extends PureComponent {
     }
 
     onDislikeActionBuilder(blogPostItem) {
-        let likeLinkObject = blogPostItem.links.find(
+        let dislikeLinkObject = blogPostItem.links.find(
             (linkObject) => linkObject.rel === 'dislike');
         return () => {
-            fetch(likeLinkObject.href, {method:'post', mode:'no-cors'});
+            fetch(dislikeLinkObject.href, {method:'post', mode:'no-cors'});
         };
     }
 
