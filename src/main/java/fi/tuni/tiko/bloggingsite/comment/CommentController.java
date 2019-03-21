@@ -1,15 +1,18 @@
 package fi.tuni.tiko.bloggingsite.comment;
 
+import fi.tuni.tiko.bloggingsite.LoginController;
 import fi.tuni.tiko.bloggingsite.ResourceCreator;
 import fi.tuni.tiko.bloggingsite.blogpost.BlogPost;
 import fi.tuni.tiko.bloggingsite.blogpost.BlogPostController;
 import fi.tuni.tiko.bloggingsite.exceptions.BlogPostIdNotFoundException;
 import fi.tuni.tiko.bloggingsite.exceptions.CommentNotFoundException;
+import fi.tuni.tiko.bloggingsite.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +38,9 @@ public class CommentController {
 
     @Autowired
     BlogPostController blogPostController;
+
+    @Autowired
+    LoginController loginController;
 
     @PostMapping("/comment")
     public Resource<Comment> saveCommentToBlogPostByPostId(
@@ -66,13 +72,26 @@ public class CommentController {
     @GetMapping("/comments/{commentId}")
     public Resource<Comment> findCommentsByIdAndByPostId(
             @PathVariable(name = "postId") Long postId,
-            @PathVariable Long commentId) throws CommentNotFoundException{
+            @PathVariable(name = "commentId") Long commentId) throws CommentNotFoundException{
         Optional<Comment> comment = commentRepository.findByIdAndAndPostId(commentId, postId);
 
         if (comment.isPresent()) {
             return createCommentResource(comment.get());
         } else {
             throw new CommentNotFoundException(commentId);
+        }
+    }
+
+    @DeleteMapping("/comment/{commentId}")
+    public void deleteCommentById(
+            @PathVariable(name = "postId") Long postId,
+            @PathVariable(name = "commentId") Long commentId)
+            throws UnauthorizedException, CommentNotFoundException {
+        if (loginController.userIsAdmin()) {
+            Comment deletable = findCommentsByIdAndByPostId(postId, commentId).getContent();
+            commentRepository.delete(deletable);
+        } else {
+            throw new UnauthorizedException();
         }
     }
 }
