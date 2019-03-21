@@ -28,10 +28,19 @@ export default class BlogPosts extends PureComponent {
                         time={item.time}
                         likes={item.likes}
                         likeAction={this.onLikeActionBuilder(item)}
+                        dislikeAction={this.onDislikeActionBuilder(item)}
                     />
                 </div>
             )
         );
+    }
+
+    onDislikeActionBuilder(blogPostItem) {
+        let likeLinkObject = blogPostItem.links.find(
+            (linkObject) => linkObject.rel === 'dislike');
+        return () => {
+            fetch(likeLinkObject.href, {method:'post', mode:'no-cors'});
+        };
     }
 
     onLikeActionBuilder(blogPostItem) {

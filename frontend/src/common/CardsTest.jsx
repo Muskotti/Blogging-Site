@@ -6,15 +6,23 @@ export default class CardsTest extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            likes: 0
+            likes: 0,
+            disable: false
         }
     }
 
     like = () => {
-        this.props.likeAction();
-        this.setState((state) => {
-            return {likes: state.likes + 1}
-        });
+        if(this.state.disable === false) {
+            this.props.likeAction();
+            this.setState((state) => {
+                return {likes: state.likes + 1, disable: true}
+            });
+        } else if (this.state.likes > 0) {
+            this.props.dislikeAction();
+            this.setState((state) => {
+                return {likes: state.likes - 1, disable: false}
+            });
+        }
     }
 
     postDate = () => {
@@ -33,7 +41,7 @@ export default class CardsTest extends PureComponent {
                         <p>{this.props.content}</p>
                         <CardActions expander>
                             <IconSeparator label={this.props.likes + this.state.likes} style={{color: 'White', fontFamily: 'Roboto'}}>
-                                <Button icon secondary swapTheming onClick={this.like}>favorite</Button>
+                                <Button icon secondary={this.state.disable} swapTheming onClick={this.like}>favorite</Button>
                             </IconSeparator>
                             <Button flat>Comment</Button>
                         </CardActions>
