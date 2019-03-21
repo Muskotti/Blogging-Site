@@ -1,7 +1,7 @@
 package fi.tuni.tiko.bloggingsite.blogpost;
 
-import fi.tuni.tiko.bloggingsite.Comment;
-import fi.tuni.tiko.bloggingsite.CommentRepository;
+import fi.tuni.tiko.bloggingsite.comment.Comment;
+import fi.tuni.tiko.bloggingsite.comment.CommentRepository;
 import fi.tuni.tiko.bloggingsite.exceptions.BlogPostIdNotFoundException;
 import fi.tuni.tiko.bloggingsite.exceptions.CommentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
