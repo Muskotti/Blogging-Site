@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
@@ -72,6 +73,20 @@ public class BlogPostController {
             return createBlogPostResource(post.get());
         } else {
             throw new BlogPostIdNotFoundException(id);
+        }
+    }
+
+    @PutMapping("/posts/edit")
+    public Resource<BlogPost> editBlogPostById(@RequestBody BlogPost edited)
+            throws BlogPostIdNotFoundException, UnauthorizedException {
+        if (loginController.userIsAdmin()) {
+            BlogPost original = findBlogPostById(edited.getId()).getContent();
+            edited.setLikes(original.getLikes());
+            edited = postRepository.save(edited);
+
+            return createBlogPostResource(edited);
+        } else {
+            throw new UnauthorizedException();
         }
     }
 
