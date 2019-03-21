@@ -38,11 +38,6 @@ public class BlogPostController {
     @Autowired
     LoginController loginController;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello, the time at the server is now " + new Date() + "\n";
-    }
-
     @PostMapping("/post")
     public Resource<BlogPost> saveBlogPost(@RequestBody BlogPost post) throws UnauthorizedException {
         if (loginController.userIsAdmin()) {
