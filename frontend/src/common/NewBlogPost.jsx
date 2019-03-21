@@ -38,6 +38,7 @@ export default class NewBlogPost extends PureComponent {
             body:JSON.stringify(obj)
         }).then(response => response.json()).then(json => console.log(json));
         window.location.reload();
+        //TODO: live update
     }
 
     render() {
