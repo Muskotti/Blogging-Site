@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     private UserType userType = UserType.ADMIN;
 
-    public UserType getUserType() {
-        return userType;
+    public boolean userIsAdmin() {
+        return userType == UserType.ADMIN;
     }
 }
