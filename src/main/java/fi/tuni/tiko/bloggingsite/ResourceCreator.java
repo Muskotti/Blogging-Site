@@ -15,7 +15,8 @@ public class ResourceCreator {
         Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(post.getId())).withSelfRel();
         Link comments = linkTo(methodOn(CommentController.class).findCommentsByPostId(post.getId())).withRel("comments");
         Link like = linkTo(methodOn(BlogPostController.class).likeBlogPostById(post.getId())).withRel("like");
-        return new Resource<>(post, selfRel, comments, like);
+        Link dislike = linkTo(methodOn(BlogPostController.class).dislikeBlogPostById(post.getId())).withRel("dislike");
+        return new Resource<>(post, selfRel, comments, like, dislike);
     }
 
     public static Resource<Comment> createCommentResource(Comment comment) {

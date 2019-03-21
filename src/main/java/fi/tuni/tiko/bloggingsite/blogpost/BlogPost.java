@@ -81,4 +81,10 @@ public class BlogPost {
     public void incrementLikes() {
         likes++;
     }
+
+    public void decrementLikes() {
+        if (likes > 0) {
+            likes--;
+        }
+    }
 }

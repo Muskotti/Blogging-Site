@@ -87,6 +87,13 @@ public class BlogPostController {
         return createBlogPostResource(postRepository.save(post));
     }
 
+    @PostMapping("posts/{id}/dislike")
+    public Resource<BlogPost> dislikeBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
+        BlogPost post = findBlogPostById(id).getContent();
+        post.decrementLikes();
+        return createBlogPostResource(postRepository.save(post));
+    }
+
     @DeleteMapping("posts/{id}/delete")
     public void deleteBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException, UnauthorizedException {
         if (loginController.userIsAdmin()) {
