@@ -1,7 +1,21 @@
-import {Card, CardText, CardTitle, CardActions, Button} from "react-md";
+import {Card, CardText, CardTitle, CardActions, Button, IconSeparator} from "react-md";
 import React, {PureComponent} from "react";
 
 export default class CardsTest extends PureComponent {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            likes: 0
+        }
+    }
+
+    like = () => {
+        this.props.likeAction();
+        this.setState((state) => {
+            return {likes: state.likes + 1}
+        });
+    }
 
     postDate = () => {
         let date = new Date(this.props.time);
@@ -18,7 +32,9 @@ export default class CardsTest extends PureComponent {
                     <CardText style={{textAlign: 'left'}}>
                         <p>{this.props.content}</p>
                         <CardActions expander>
-                            <Button icon secondary swapTheming onClick={this.props.likeAction}>favorite</Button>
+                            <IconSeparator label={this.props.likes + this.state.likes} style={{color: 'White', fontFamily: 'Roboto'}}>
+                                <Button icon secondary swapTheming onClick={this.like}>favorite</Button>
+                            </IconSeparator>
                             <Button flat>Comment</Button>
                         </CardActions>
                     </CardText>

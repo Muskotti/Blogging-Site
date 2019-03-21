@@ -26,6 +26,7 @@ export default class BlogPosts extends PureComponent {
                         author={item.author}
                         content={item.content}
                         time={item.time}
+                        likes={item.likes}
                         likeAction={this.onLikeActionBuilder(item)}
                     />
                 </div>
