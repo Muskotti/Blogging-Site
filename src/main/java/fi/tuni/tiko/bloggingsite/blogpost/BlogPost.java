@@ -1,4 +1,4 @@
-package fi.tuni.tiko.bloggingsite;
+package fi.tuni.tiko.bloggingsite.blogpost;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

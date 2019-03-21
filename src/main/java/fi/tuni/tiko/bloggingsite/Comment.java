@@ -1,6 +1,7 @@
 package fi.tuni.tiko.bloggingsite;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fi.tuni.tiko.bloggingsite.blogpost.BlogPost;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 

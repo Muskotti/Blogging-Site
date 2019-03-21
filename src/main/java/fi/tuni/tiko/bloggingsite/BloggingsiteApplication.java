@@ -1,6 +1,8 @@
 package fi.tuni.tiko.bloggingsite;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.tuni.tiko.bloggingsite.blogpost.BlogPost;
+import fi.tuni.tiko.bloggingsite.blogpost.BlogPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +17,7 @@ import java.util.List;
 public class BloggingsiteApplication implements CommandLineRunner {
 
 	@Autowired
-	BlogPostRepository postRepository;
+    BlogPostRepository postRepository;
 
 	@Autowired
 	CommentRepository commentRepository;
