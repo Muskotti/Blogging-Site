@@ -82,7 +82,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/comment/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public void deleteCommentById(
             @PathVariable(name = "postId") Long postId,
             @PathVariable(name = "commentId") Long commentId)
