@@ -78,6 +78,10 @@ public class BlogPost {
         return likes;
     }
 
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
     public void incrementLikes() {
         likes++;
     }
