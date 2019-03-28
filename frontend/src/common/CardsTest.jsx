@@ -17,6 +17,9 @@ export default class CardsTest extends PureComponent {
         super(props);
 
         this.textField = React.createRef();
+        this.titleField = React.createRef();
+        this.authorField = React.createRef();
+        this.contentField = React.createRef();
 
         this.state = {
             likes: 0,
@@ -114,8 +117,22 @@ export default class CardsTest extends PureComponent {
     }
 
     editPost = () => {
-        console.log('asd');
-        //TODO: save edit
+        let obj = {
+            "id": this.props.id,
+            "title": this.titleField.current.value,
+            "author": this.authorField.current.value,
+            "content": this.contentField.current.value,
+            "time": new Date().getTime()
+        }
+        fetch('/posts/edit', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            }, body:JSON.stringify(obj)})
+            .then(response => response.json())
+            .then(result => console.log(result));
+        window.location.reload();
+        //TODO: live edit
     }
 
     deleteBlog = () => {
@@ -148,6 +165,7 @@ export default class CardsTest extends PureComponent {
                         <p style={{margin: '0px', paddingLeft: '8px', paddingRight: '8px'}}>{this.props.likes + this.state.likes}</p>
                         <Button icon secondary={this.state.disable} swapTheming onClick={this.like}>favorite</Button>
                         <MenuButton
+                            id={this.props.id + 'Menu'}
                             icon
                             swapTheming
                             menuItems={[
@@ -167,23 +185,28 @@ export default class CardsTest extends PureComponent {
                     onHide={this.hide}
                     actions={actions}
                     title="Edit Blog Post"
-                    width={500}
                 >
                     <TextField
                         id="title"
                         label={"Title of the post:"}
                         required={true}
+                        defaultValue={this.props.title}
+                        ref={this.titleField}
                     />
                     <TextField
                         id="author"
                         label={"Authors name:"}
                         required={true}
+                        defaultValue={this.props.author}
+                        ref={this.authorField}
                     />
                     <TextField
                         id="content"
                         label="Content:"
                         rows={5}
                         required={true}
+                        defaultValue={this.props.content}
+                        ref={this.contentField}
                     />
                 </DialogContainer>
             </div>
