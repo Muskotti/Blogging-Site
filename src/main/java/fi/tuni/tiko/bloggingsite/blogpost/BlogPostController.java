@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -32,6 +33,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api/posts")
 public class BlogPostController {
     @Autowired
     BlogPostRepository postRepository;
@@ -39,7 +41,7 @@ public class BlogPostController {
     @Autowired
     LoginController loginController;
 
-    @PostMapping("/post")
+    @PostMapping("/create")
     public Resource<BlogPost> saveBlogPost(@RequestBody BlogPost post) throws UnauthorizedException {
         if (loginController.userIsAdmin()) {
             BlogPost createdPost = postRepository.save(post);
@@ -52,7 +54,7 @@ public class BlogPostController {
         }
     }
 
-    @GetMapping("/posts")
+    @GetMapping("/")
     public Resources<Resource<BlogPost>> findAllBlogPosts() {
         Iterable<BlogPost> postIterable = postRepository.findAll();
         List<BlogPost> postList = new ArrayList<>();
@@ -65,7 +67,7 @@ public class BlogPostController {
         return new Resources<>(postResources, selfRel);
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/{id}")
     public Resource<BlogPost> findBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         Optional<BlogPost> post = postRepository.findById(id);
 
@@ -76,7 +78,7 @@ public class BlogPostController {
         }
     }
 
-    @PutMapping("/posts/edit")
+    @PutMapping("/edit")
     public Resource<BlogPost> editBlogPostById(@RequestBody BlogPost edited)
             throws BlogPostIdNotFoundException, UnauthorizedException {
         if (loginController.userIsAdmin()) {
@@ -90,21 +92,21 @@ public class BlogPostController {
         }
     }
 
-    @PostMapping("posts/{id}/like")
+    @PutMapping("/{id}/like")
     public Resource<BlogPost> likeBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         BlogPost post = findBlogPostById(id).getContent();
         post.incrementLikes();
         return createBlogPostResource(postRepository.save(post));
     }
 
-    @PostMapping("posts/{id}/dislike")
+    @PutMapping("/{id}/dislike")
     public Resource<BlogPost> dislikeBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         BlogPost post = findBlogPostById(id).getContent();
         post.decrementLikes();
         return createBlogPostResource(postRepository.save(post));
     }
 
-    @DeleteMapping("posts/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public void deleteBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException, UnauthorizedException {
         if (loginController.userIsAdmin()) {
             BlogPost post = findBlogPostById(id).getContent();

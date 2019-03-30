@@ -30,7 +30,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/posts/{postId}")
+@RequestMapping("/api/posts/{postId}/comments")
 public class CommentController {
 
     @Autowired
@@ -42,7 +42,7 @@ public class CommentController {
     @Autowired
     LoginController loginController;
 
-    @PostMapping("/comment")
+    @PostMapping("/create")
     public Resource<Comment> saveCommentToBlogPostByPostId(
             @PathVariable(name = "postId") Long id,
             @RequestBody Comment comment) throws BlogPostIdNotFoundException {
@@ -55,7 +55,7 @@ public class CommentController {
         return new Resource<>(createdComment, selfRel);
     }
 
-    @GetMapping("/comments")
+    @GetMapping("/")
     public Resources<Resource<Comment>> findCommentsByPostId(
             @PathVariable(name = "postId") Long id) {
         Iterable<Comment> commentIterable = commentRepository.findAllByPostId(id);
@@ -69,10 +69,10 @@ public class CommentController {
         return new Resources<>(commentResources, selfRel);
     }
 
-    @GetMapping("/comments/{commentId}")
+    @GetMapping("/{commentId}")
     public Resource<Comment> findCommentsByIdAndByPostId(
             @PathVariable(name = "postId") Long postId,
-            @PathVariable(name = "commentId") Long commentId) throws CommentNotFoundException{
+            @PathVariable(name = "commentId") Long commentId) throws CommentNotFoundException {
         Optional<Comment> comment = commentRepository.findByIdAndAndPostId(commentId, postId);
 
         if (comment.isPresent()) {
@@ -82,7 +82,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{commentId}/delete")
     public void deleteCommentById(
             @PathVariable(name = "postId") Long postId,
             @PathVariable(name = "commentId") Long commentId)
