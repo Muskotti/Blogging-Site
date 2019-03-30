@@ -4,36 +4,40 @@ import CardsTest from './common/CardsTest'
 
 export default class BlogPosts extends PureComponent {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: null
-        };
-    }
-
-    componentDidMount() {
-        fetch('/posts')
-            .then(response => response.json())
-            .then(data => this.setState({data: data.content}))
-    }
-
     render() {
-        return (
-            this.state && this.state.data && this.state.data.map((item) =>
-                <div key={item.id}>
+        if(this.props.data) {
+            return (
+                this.props.data.map((item) =>
+                    <div key={item.id}>
+                        <CardsTest
+                            id={item.id}
+                            title={item.title}
+                            author={item.author}
+                            content={item.content}
+                            time={item.time}
+                            likes={item.likes}
+                            likeAction={this.onLikeActionBuilder(item)}
+                            dislikeAction={this.onDislikeActionBuilder(item)}
+                        />
+                    </div>
+                )
+            );
+        } else if (this.props.singlePost){
+            return (
+                <div key={this.props.singlePost.id}>
                     <CardsTest
-                        id={item.id}
-                        title={item.title}
-                        author={item.author}
-                        content={item.content}
-                        time={item.time}
-                        likes={item.likes}
-                        likeAction={this.onLikeActionBuilder(item)}
-                        dislikeAction={this.onDislikeActionBuilder(item)}
+                        id={this.props.singlePost.id}
+                        title={this.props.singlePost.title}
+                        author={this.props.singlePost.author}
+                        content={this.props.singlePost.content}
+                        time={this.props.singlePost.time}
+                        likes={this.props.singlePost.likes}
+                        likeAction={this.onLikeActionBuilder(this.props.singlePost)}
+                        dislikeAction={this.onDislikeActionBuilder(this.props.singlePost)}
                     />
                 </div>
             )
-        );
+        }
     }
 
     onDislikeActionBuilder(blogPostItem) {

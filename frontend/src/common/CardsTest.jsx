@@ -1,4 +1,14 @@
-import {Card, CardText, CardTitle, CardActions, Button, TextField, IconSeparator} from "react-md";
+import {
+    Card,
+    CardText,
+    CardTitle,
+    CardActions,
+    Button,
+    TextField,
+    IconSeparator,
+    MenuButton,
+    ListItem, DialogContainer
+} from "react-md";
 import React, {PureComponent} from "react";
 
 export default class CardsTest extends PureComponent {
@@ -7,6 +17,9 @@ export default class CardsTest extends PureComponent {
         super(props);
 
         this.textField = React.createRef();
+        this.titleField = React.createRef();
+        this.authorField = React.createRef();
+        this.contentField = React.createRef();
 
         this.state = {
             likes: 0,
@@ -14,8 +27,17 @@ export default class CardsTest extends PureComponent {
             expanded: false,
             comments: [],
             isLoading: false,
+            visible: false,
         }
     }
+
+    show = () => {
+        this.setState({ visible: true });
+    };
+
+    hide = () => {
+        this.setState({visible: false,});
+    };
 
     like = () => {
         if(this.state.disable === false) {
@@ -94,8 +116,44 @@ export default class CardsTest extends PureComponent {
         //TODO: live update
     }
 
+    editPost = () => {
+        let obj = {
+            "id": this.props.id,
+            "title": this.titleField.current.value,
+            "author": this.authorField.current.value,
+            "content": this.contentField.current.value,
+            "time": new Date().getTime()
+        }
+        fetch('/posts/edit', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            }, body:JSON.stringify(obj)})
+            .then(response => response.json())
+            .then(result => console.log(result));
+        window.location.reload();
+        //TODO: live edit
+    }
+
+    deleteBlog = () => {
+        fetch('/posts/' + this.props.id + '/delete', {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }, body:JSON.stringify(this.props.id)})
+            .then(response => response.json())
+            .then(result => console.log(result));
+        window.location.reload();
+        //TODO: live delete
+    }
+
     render() {
         const style = { minWidth: 500, maxWidth: 640, marginBottom: 20};
+
+        const actions = [];
+        actions.push(<Button flat primary swapTheming onClick={this.hide}>Cancel</Button>);
+        actions.push(<Button flat secondary swapTheming onClick={this.editPost}>Edit</Button>);
+
         return (
             <div>
                 <Card style={style} className="md-block-centered" onExpanderClick={this.getComments}>
@@ -106,9 +164,51 @@ export default class CardsTest extends PureComponent {
                     <CardActions expander>
                         <p style={{margin: '0px', paddingLeft: '8px', paddingRight: '8px'}}>{this.props.likes + this.state.likes}</p>
                         <Button icon secondary={this.state.disable} swapTheming onClick={this.like}>favorite</Button>
+                        <MenuButton
+                            id={this.props.id + 'Menu'}
+                            icon
+                            swapTheming
+                            menuItems={[
+                                <ListItem key={1} primaryText="Modify" onClick={this.show}/>,
+                                <ListItem key={2} primaryText="Delete" onClick={this.deleteBlog}/>,
+                            ]}
+                            centered
+                        >
+                            more_vert
+                        </MenuButton>
                     </CardActions>
                     {this.showComments()}
                 </Card>
+                <DialogContainer
+                    id="new-blog-post"
+                    visible={this.state.visible}
+                    onHide={this.hide}
+                    actions={actions}
+                    title="Edit Blog Post"
+                >
+                    <TextField
+                        id="title"
+                        label={"Title of the post:"}
+                        required={true}
+                        defaultValue={this.props.title}
+                        ref={this.titleField}
+                    />
+                    <TextField
+                        id="author"
+                        label={"Authors name:"}
+                        required={true}
+                        defaultValue={this.props.author}
+                        ref={this.authorField}
+                    />
+                    <TextField
+                        id="content"
+                        label="Content:"
+                        rows={5}
+                        required={true}
+                        defaultValue={this.props.content}
+                        ref={this.contentField}
+                    />
+                </DialogContainer>
             </div>
         )
     }
