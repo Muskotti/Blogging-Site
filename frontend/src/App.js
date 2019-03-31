@@ -35,7 +35,17 @@ class App extends Component {
     render() {
         if(!this.state.data) {
             return(
-                <p>Loading ...</p>
+                <div className="App">
+                    <Toolbar
+                        themed
+                        title="Blogging site"
+                        actions={<LoggingDialogs/>}
+                    />
+                    <div className="md-grid">
+                        <NewBlogPost/>
+                    </div>
+                    <p>Loading ...</p>
+                </div>
                 )
         } else if(this.state.visible) {
             return (
