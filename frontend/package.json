@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "npm config set proxy null && react-scripts build && copyfiles --verbose ./build/**/*.* ../src/main/resources/",
+    "build": "npm config set proxy null && react-scripts build && copyfiles --verbose -u 1 ./build/**/*.* ../src/main/resources/static",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
