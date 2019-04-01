@@ -5,6 +5,7 @@
   "dependencies": {
     "node-sass": "^4.11.0",
     "react": "^16.8.4",
+
     "react-dom": "^16.8.4",
     "react-md": "^1.9.3",
     "react-router-dom": "^4.3.1",
@@ -13,7 +14,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm config set proxy null && react-scripts build && copyfiles --verbose ./build/**/*.* ../src/main/resources/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
