@@ -73,7 +73,7 @@ public class ResourceCreator {
         Optional<Link> delete;
         try {
             delete = Optional.of(linkTo(methodOn(BlogPostController.class).deleteBlogPostById(post.getId()))
-                    .withRel("edit")
+                    .withRel("delete")
                     .withType(DEL));
         } catch (UnauthorizedException e) {
             delete = Optional.empty();
