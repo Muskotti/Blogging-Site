@@ -3,26 +3,21 @@ import ApiRequest from "./ApiRequest";
 export default class ApiRequestHandler {
 
   //Returns an ApiRequest object for requesting all blog posts
-  static getAllBlogPostsRequest() {
+  static async getAllBlogPostsRequest() {
     return this.getRequestByRel('getPosts');
   }
 
-  static getCreateBlogPostRequest() {
+  static async getCreateBlogPostRequest() {
     return this.getRequestByRel('createPost');
   }
 
-  static getRequestByRel(rel) {
+  static async getRequestByRel(rel) {
     let apiRoot = '/api/';
-    let request;
 
-    fetch(apiRoot)
-      .then(httpResp => httpResp.json())
-      .then(resourceJson => {
-        let link = this.getLinkFromArrayByRel(resourceJson.links, rel);
-        request = new ApiRequest(link.href, link.type);
-      });
-
-    return request;
+    const httpResp = await fetch(apiRoot);
+    const resourceJson = await httpResp.json();
+    const link = this.getLinkFromArrayByRel(resourceJson.links, rel);
+    return new ApiRequest(link.href, link.type);
   }
 
   static getLinkFromArrayByRel(links, rel) {
