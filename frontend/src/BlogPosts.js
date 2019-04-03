@@ -16,6 +16,7 @@ export default class BlogPosts extends PureComponent {
                             content={item.content}
                             time={item.time}
                             likes={item.likes}
+                            links={item.links}
                             likeAction={this.onLikeActionBuilder(item)}
                             dislikeAction={this.onDislikeActionBuilder(item)}
                         />
