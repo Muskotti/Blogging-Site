@@ -41,12 +41,12 @@ export default class CardsTest extends PureComponent {
 
     like = () => {
         if(this.state.disable === false) {
-            this.props.likeAction();
+            this.doActionByRel('like');
             this.setState((state) => {
                 return {likes: state.likes + 1, disable: true}
             });
         } else if (this.state.likes > 0) {
-            this.props.dislikeAction();
+            this.doActionByRel('dislike');
             this.setState((state) => {
                 return {likes: state.likes - 1, disable: false}
             });
@@ -62,8 +62,7 @@ export default class CardsTest extends PureComponent {
 
     getComments = () => {
         this.setState({ isLoading: true });
-        fetch('/posts/' + this.props.id + '/comments')
-            .then(response => response.json())
+        this.doActionByRel('comments')
             .then(data => this.setState({comments: data.content, isLoading: false}))
     }
 
@@ -105,14 +104,9 @@ export default class CardsTest extends PureComponent {
     postComment = () => {
         let obj = {
             "text": this.textField.current.value,
-        }
-        fetch('/posts/' + this.props.id + '/comment', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            }, body:JSON.stringify(obj)})
-            .then(response => response.json());
-        window.location.reload();
+        };
+        this.doActionByRel('addComment', obj)
+            .then(dummyArg => window.location.reload());
         //TODO: live update
     }
 
@@ -123,27 +117,18 @@ export default class CardsTest extends PureComponent {
             "author": this.authorField.current.value,
             "content": this.contentField.current.value,
             "time": new Date().getTime()
-        }
-        fetch('/posts/edit', {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            }, body:JSON.stringify(obj)})
-            .then(response => response.json())
-            .then(result => console.log(result));
-        window.location.reload();
+        };
+        this.doActionByRel('edit', obj)
+            .then(dummyArg => window.location.reload());
         //TODO: live edit
     }
 
     deleteBlog = () => {
-        fetch('/posts/' + this.props.id + '/delete', {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            }, body:JSON.stringify(this.props.id)})
-            .then(response => response.json())
-            .then(result => console.log(result));
-        window.location.reload();
+        this.doActionByRel('delete')
+            .then(jsonResp => {
+                console.log(jsonResp);
+                window.location.reload();
+            });
         //TODO: live delete
     }
 
@@ -211,5 +196,34 @@ export default class CardsTest extends PureComponent {
                 </DialogContainer>
             </div>
         )
+    }
+
+    async doActionByRel(rel, optionalBody) {
+        let link = this.props.links.find((link) => link.rel === rel);
+
+        if (typeof link === 'undefined') {
+            throw new Error('Invalid argument provided: rel');
+        }
+
+        if (typeof optionalBody === 'undefined') {
+            const response = await fetch(link.href, {
+                method: link.type});
+            console.log(response);
+            let json;
+            try {
+                json = await response.json();
+            } catch (e) {
+                json = {};
+            }
+
+            return json;
+        } else {
+            const response = await fetch(link.href, {
+                method: link.type,
+                headers: {"Content-Type": "application/json"},
+                body:JSON.stringify(optionalBody)
+            });
+            return await response.json();
+        }
     }
 }
