@@ -30,8 +30,8 @@ export default class NewBlogPost extends PureComponent {
             "time": new Date().getTime()
         }
 
-        fetch('./post', {
-            method: "POST",
+        fetch(this.props.link.href, {
+            method: this.props.link.type,
             headers: {
                 "Content-Type": "application/json"
             },

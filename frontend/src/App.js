@@ -16,6 +16,7 @@ class App extends Component {
             posts: null,
             visible: false,
             post: null,
+            createPostLink: null
         };
     }
 
@@ -30,7 +31,15 @@ class App extends Component {
     componentDidMount() {
         fetch("/api/posts/", {mode:"no-cors", method: "GET"})
             .then(response => response.json())
-            .then(resourceJson => this.setState({posts: resourceJson.content}));
+            .then(resourceJson => this.setState({
+                posts: resourceJson.content,
+            }));
+        fetch("/api/", {mode:"no-cors", method:"GET"})
+            .then(response => response.json())
+            .then(resourceJson => this.setState({
+                createPostLink: resourceJson.links.find(
+                    (link) => link.rel === 'createPost')
+            }));
     }
 
     render() {
@@ -43,7 +52,9 @@ class App extends Component {
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost/>
+                        <NewBlogPost
+                            link={this.state.createPostLink}
+                        />
                     </div>
                     <p>Loading ...</p>
                 </div>
@@ -58,7 +69,9 @@ class App extends Component {
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost/>
+                        <NewBlogPost
+                            link={this.state.createPostLink}
+                        />
                     </div>
                     <BlogPosts singlePost={this.state.post}/>
                 </div>
@@ -73,7 +86,9 @@ class App extends Component {
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost/>
+                        <NewBlogPost
+                            link={this.state.createPostLink}
+                        />
                     </div>
                     <BlogPosts data={this.state.posts}/>
                 </div>
