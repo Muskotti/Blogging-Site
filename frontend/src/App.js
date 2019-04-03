@@ -13,7 +13,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: null,
+            posts: null,
             visible: false,
             post: null,
         };
@@ -30,11 +30,11 @@ class App extends Component {
     componentDidMount() {
         fetch("/api/posts/", {mode:"no-cors", method: "GET"})
             .then(response => response.json())
-            .then(resourceJson => this.setState({data: resourceJson.content}));
+            .then(resourceJson => this.setState({posts: resourceJson.content}));
     }
 
     render() {
-        if(!this.state.data) {
+        if(!this.state.posts) {
             return(
                 <div className="App">
                     <Toolbar
@@ -54,7 +54,7 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        children={<Search data={this.state.data} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>}
+                        children={<Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>}
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
@@ -69,20 +69,20 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        children={<Search data={this.state.data} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>}
+                        children={<Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>}
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
                         <NewBlogPost/>
                     </div>
-                    <BlogPosts data={this.state.data}/>
+                    <BlogPosts data={this.state.posts}/>
                 </div>
             );
         }
     }
 
     onAutocomplete = (result) => {
-        for(let item of this.state.data) {
+        for(let item of this.state.posts) {
             if(item.title === result) {
                 this.setState({
                     post: item
