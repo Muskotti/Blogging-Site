@@ -2,10 +2,7 @@ package fi.tuni.tiko.bloggingsite.blogpost;
 
 import fi.tuni.tiko.bloggingsite.LoginController;
 import fi.tuni.tiko.bloggingsite.ResourceCreator;
-import fi.tuni.tiko.bloggingsite.comment.Comment;
-import fi.tuni.tiko.bloggingsite.comment.CommentRepository;
 import fi.tuni.tiko.bloggingsite.exceptions.BlogPostIdNotFoundException;
-import fi.tuni.tiko.bloggingsite.exceptions.CommentNotFoundException;
 import fi.tuni.tiko.bloggingsite.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -21,15 +18,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 
 import static fi.tuni.tiko.bloggingsite.ResourceCreator.createBlogPostResource;
-import static fi.tuni.tiko.bloggingsite.ResourceCreator.createCommentResource;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,10 +38,10 @@ public class BlogPostController {
     LoginController loginController;
 
     @PostMapping("/create")
-    public Resource<BlogPost> saveBlogPost(@RequestBody BlogPost post) throws UnauthorizedException {
+    public Resource<BlogPost> createBlogPost(@RequestBody BlogPost post) throws UnauthorizedException {
         if (loginController.userIsAdmin()) {
             BlogPost createdPost = postRepository.save(post);
-            Link selfRel = linkTo(methodOn(BlogPostController.class).saveBlogPost(post)).withSelfRel();
+            Link selfRel = linkTo(methodOn(BlogPostController.class).createBlogPost(post)).withSelfRel();
             Link createdRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(createdPost.getId())).withRel("createdBlogPost");
 
             return new Resource<>(createdPost, selfRel, createdRel);

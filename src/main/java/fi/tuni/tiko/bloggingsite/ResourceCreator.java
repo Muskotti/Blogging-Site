@@ -7,8 +7,10 @@ import fi.tuni.tiko.bloggingsite.comment.CommentController;
 import fi.tuni.tiko.bloggingsite.exceptions.UnauthorizedException;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -19,6 +21,31 @@ public class ResourceCreator {
     private final static String PUT  = "PUT";
     private final static String POST = "POST";
     private final static String DEL  = "DELETE";
+
+    public static Resources<Object> createApiRootResource() {
+        Link selfRel = linkTo(methodOn(ApiController.class).getNonInferableLinks())
+                .withSelfRel()
+                .withType(GET);
+
+        Link getPosts = linkTo(methodOn(BlogPostController.class).findAllBlogPosts())
+                .withRel("getPosts")
+                .withType(GET);
+
+        Optional<Link> createPost;
+        try{
+            createPost = Optional.of(linkTo(methodOn(BlogPostController.class).createBlogPost(null))
+                    .withRel("createPost")
+                    .withType(POST));
+        } catch (UnauthorizedException e) {
+            createPost = Optional.empty();
+        }
+
+        if (createPost.isPresent()) {
+            return new Resources<>(Collections.emptySet(), selfRel, getPosts, createPost.get());
+        } else {
+            return new Resources<>(Collections.emptySet(), selfRel, getPosts);
+        }
+    }
 
     public static Resource<BlogPost> createBlogPostResource(BlogPost post) {
         Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(post.getId()))
@@ -58,7 +85,7 @@ public class ResourceCreator {
 
         Link addComment = linkTo(methodOn(CommentController.class).saveCommentToBlogPostByPostId(
                 post.getId(), new Comment("Comment content here", post)))
-                .withRel("add comment")
+                .withRel("addComment")
                 .withType(POST);
 
         Link[] links = createLinkArray(optionalLinkArray(edit, delete),
@@ -84,13 +111,15 @@ public class ResourceCreator {
 
     private static Link[] createLinkArray(Link[] optionalLinks, Link... commonLinks) {
         Link[] combinedLinks = new Link[optionalLinks.length + commonLinks.length];
+        int combinedIndex = 0;
 
         for (int i = 0; i < commonLinks.length; i++) {
             combinedLinks[i] = commonLinks[i];
+            combinedIndex++;
         }
 
         for (int i = 0; i < optionalLinks.length; i++) {
-            combinedLinks[commonLinks.length - 1 + i] = optionalLinks[i];
+            combinedLinks[combinedIndex++] = optionalLinks[i];
         }
 
         return combinedLinks;
