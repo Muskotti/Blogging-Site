@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fi.tuni.tiko</groupId>
 	<artifactId>bloggingsite</artifactId>
-	<version>r1</version>
+	<version>r2</version>
 	<name>bloggingsite</name>
 	<description>Demo project for Spring Boot</description>
 
