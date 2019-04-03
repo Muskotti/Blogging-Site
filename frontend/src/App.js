@@ -6,6 +6,7 @@ import LoggingDialogs from "./common/LoggingDialogs";
 import Search from "./common/Search"
 import NewBlogPost from "./common/NewBlogPost"
 import BlogPosts from "./BlogPosts"
+import ApiRequestHandler from "./ApiRequestHandler";
 
 class App extends Component {
 
@@ -27,9 +28,9 @@ class App extends Component {
     };
 
     componentDidMount() {
-        fetch('/posts')
+        fetch("/api/posts/", {mode:"no-cors", method: "GET"})
             .then(response => response.json())
-            .then(data => this.setState({data: data.content}))
+            .then(resourceJson => this.setState({data: resourceJson.content}));
     }
 
     render() {
