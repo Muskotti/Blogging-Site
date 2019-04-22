@@ -50,7 +50,7 @@ export default class NewBlogPost extends PureComponent {
 
         return (
             <div>
-                <Button floating secondary onClick={this.show}>add</Button>
+                <Button flat secondary swapTheming onClick={this.show}>New Post</Button>
                 <DialogContainer
                     id="new-blog-post"
                     visible={visible}
