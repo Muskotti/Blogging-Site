@@ -8,7 +8,7 @@ export default class BlogPosts extends PureComponent {
         if(this.props.data) {
             return (
                 this.props.data.map((item) =>
-                    <div key={item.id}>
+                    <div key={item.id} className="md-block-centered md-cell--10" style={{marginBottom: '16px'}}>
                         <CardsTest
                             id={item.id}
                             title={item.title}
@@ -25,7 +25,7 @@ export default class BlogPosts extends PureComponent {
             );
         } else if (this.props.singlePost){
             return (
-                <div key={this.props.singlePost.id}>
+                <div key={this.props.singlePost.id} className="md-block-centered md-cell--10">
                     <CardsTest
                         id={this.props.singlePost.id}
                         title={this.props.singlePost.title}
