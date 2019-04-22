@@ -63,7 +63,7 @@ export default class CardsTest extends PureComponent {
     getComments = () => {
         this.setState({ isLoading: true });
         this.doActionByRel('comments')
-            .then(data => this.setState({comments: data.content, isLoading: false}))
+            .then(data => this.setState({comments: data, isLoading: false}))
     }
 
     showComments() {
@@ -133,7 +133,6 @@ export default class CardsTest extends PureComponent {
     }
 
     render() {
-        const style = { minWidth: 500, maxWidth: 640, marginBottom: 20};
 
         const actions = [];
         actions.push(<Button flat primary swapTheming onClick={this.hide}>Cancel</Button>);
@@ -141,7 +140,7 @@ export default class CardsTest extends PureComponent {
 
         return (
             <div>
-                <Card style={style} className="md-block-centered" onExpanderClick={this.getComments}>
+                <Card onExpanderClick={this.getComments}>
                     <CardTitle style={{textAlign: 'left'}} title={this.props.title} subtitle={"By: " + this.props.author + " - " + this.postDate()}/>
                     <CardText style={{textAlign: 'left'}}>
                         <p>{this.props.content}</p>
@@ -207,18 +206,20 @@ export default class CardsTest extends PureComponent {
 
         if (typeof optionalBody === 'undefined') {
             const response = await fetch(link.href, {
+                mode: "no-cors",
                 method: link.type});
             console.log(response);
             let json;
             try {
                 json = await response.json();
             } catch (e) {
-                json = {};
+                json = [];
             }
 
             return json;
         } else {
             const response = await fetch(link.href, {
+                mode: "no-cors",
                 method: link.type,
                 headers: {"Content-Type": "application/json"},
                 body:JSON.stringify(optionalBody)
