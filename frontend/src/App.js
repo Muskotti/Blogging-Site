@@ -52,9 +52,7 @@ class App extends Component {
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost
-                            link={this.state.createPostLink}
-                        />
+                        <NewBlogPost link={this.state.createPostLink}/>
                     </div>
                     <p>Loading ...</p>
                 </div>
@@ -65,13 +63,11 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        children={<Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>}
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost
-                            link={this.state.createPostLink}
-                        />
+                        <NewBlogPost link={this.state.createPostLink}/>
+                        <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
                     </div>
                     <BlogPosts singlePost={this.state.post}/>
                 </div>
@@ -82,15 +78,15 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        children={<Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>}
                         actions={<LoggingDialogs/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost
-                            link={this.state.createPostLink}
-                        />
+                        <NewBlogPost link={this.state.createPostLink}/>
+                        <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
                     </div>
-                    <BlogPosts data={this.state.posts}/>
+                    <div className="md-grid">
+                        <BlogPosts data={this.state.posts}/>
+                    </div>
                 </div>
             );
         }
