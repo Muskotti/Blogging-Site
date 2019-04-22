@@ -4,8 +4,8 @@ import './App.scss';
 
 import LoggingDialogs from "./common/LoggingDialogs";
 import Search from "./common/Search"
-import NewBlogPost from "./common/NewBlogPost"
 import BlogPosts from "./BlogPosts"
+import KebabMenu from  "./common/KebabMenu"
 import ApiRequestHandler from "./ApiRequestHandler";
 
 class App extends Component {
@@ -16,7 +16,8 @@ class App extends Component {
             posts: null,
             visible: false,
             post: null,
-            createPostLink: null
+            createPostLink: null,
+            loggedIn: false,
         };
     }
 
@@ -49,39 +50,72 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        actions={<LoggingDialogs/>}
+                        actions={<LoggingDialogs setLoginStatus={this.setLoginStatus}/>}
                     />
-                    <div className="md-grid">
-                        <NewBlogPost link={this.state.createPostLink}/>
-                    </div>
                     <p>Loading ...</p>
                 </div>
                 )
         } else if(this.state.visible) {
+            if(this.state.loggedIn) {
+                return (
+                    <div className="App">
+                        <Toolbar
+                            themed
+                            title="Blogging site"
+                            actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}/>}
+                        />
+                        <div className="md-grid">
+                            <Search data={this.state.posts} onAutocomplete={this.onAutocomplete}
+                                    onChange={this.onChange}/>
+                        </div>
+                        <div className="md-grid">
+                            <BlogPosts singlePost={this.state.post}/>
+                        </div>
+                    </div>
+                )
+            } else {
+                return (
+                    <div className="App">
+                        <Toolbar
+                            themed
+                            title="Blogging site"
+                            actions={<LoggingDialogs setLoginStatus={this.setLoginStatus}/>}
+                        />
+                        <div className="md-grid">
+                            <Search data={this.state.posts} onAutocomplete={this.onAutocomplete}
+                                    onChange={this.onChange}/>
+                        </div>
+                        <div className="md-grid">
+                            <BlogPosts singlePost={this.state.post}/>
+                        </div>
+                    </div>
+                )
+            }
+        } else if(this.state.loggedIn) {
             return (
                 <div className="App">
                     <Toolbar
                         themed
                         title="Blogging site"
-                        actions={<LoggingDialogs/>}
+                        actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost link={this.state.createPostLink}/>
                         <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
                     </div>
-                    <BlogPosts singlePost={this.state.post}/>
+                    <div className="md-grid">
+                        <BlogPosts data={this.state.posts}/>
+                    </div>
                 </div>
-                )
+            )
         } else {
             return (
                 <div className="App">
                     <Toolbar
                         themed
                         title="Blogging site"
-                        actions={<LoggingDialogs/>}
+                        actions={<LoggingDialogs setLoginStatus={this.setLoginStatus}/>}
                     />
                     <div className="md-grid">
-                        <NewBlogPost link={this.state.createPostLink}/>
                         <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
                     </div>
                     <div className="md-grid">
@@ -90,6 +124,10 @@ class App extends Component {
                 </div>
             );
         }
+    }
+
+    setLoginStatus = (result) => {
+        this.setState({loggedIn: result})
     }
 
     onAutocomplete = (result) => {
