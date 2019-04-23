@@ -11,53 +11,48 @@ export default class NewBlogPost extends PureComponent {
         this.contentField = React.createRef();
     }
 
-    state = {visible: false,};
-
-    show = () => {
-        this.setState({ visible: true });
-    };
-
     hide = () => {
-        this.setState({visible: false,});
-    };
+        this.props.hide()
+    }
 
     newPost = () => {
-        this.hide();
+        if(this.titleField.current.value.length !== 0
+            && this.authorField.current.value.length !== 0
+            && this.contentField.current.value.length !== 0 ) {
+            this.hide()
 
-        let link = this.props.link
-        link.href = this.removeDomainFromUrl(link.href);
+            let link = this.props.link
+            link.href = this.removeDomainFromUrl(link.href);
 
-        let obj = {
-            "title": this.titleField.current.value,
-            "author": this.authorField.current.value,
-            "content": this.contentField.current.value,
-            "time": new Date().getTime()
+            let obj = {
+                "title": this.titleField.current.value,
+                "author": this.authorField.current.value,
+                "content": this.contentField.current.value,
+                "time": new Date().getTime()
+            }
+
+            fetch(link.href, {
+                method: this.props.link.type,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(obj)
+            })
+                .then(response => response.json())
+                .then(json => this.props.updatePage(json));
         }
-
-        fetch(link.href, {
-            method: this.props.link.type,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body:JSON.stringify(obj)
-        })
-            .then(response => response.json())
-            .then(json => this.props.updatePage(json));
     }
 
     render() {
-        const { visible } = this.state;
-
         const actions = [];
         actions.push(<Button flat primary swapTheming onClick={this.hide}>Cancel</Button>);
         actions.push(<Button flat secondary swapTheming onClick={this.newPost}>Send</Button>);
 
         return (
             <div>
-                <Button flat secondary swapTheming onClick={this.show}>New Post</Button>
                 <DialogContainer
                     id="new-blog-post"
-                    visible={visible}
+                    visible={this.props.show}
                     onHide={this.hide}
                     actions={actions}
                     title="New Blog Post"
