@@ -62,7 +62,7 @@ class App extends Component {
                         <Toolbar
                             themed
                             title="Blogging site"
-                            actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}/>}
+                            actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus} link={this.state.createPostLink} updatePage={this.updatePage}/>}
                         />
                         <div className="md-grid">
                             <Search data={this.state.posts} onAutocomplete={this.onAutocomplete}
@@ -97,7 +97,7 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}/>}
+                        actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus} link={this.state.createPostLink} updatePage={this.updatePage}/>}
                     />
                     <div className="md-grid">
                         <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
@@ -145,6 +145,12 @@ class App extends Component {
         if(item === '') {
             this.hide()
         }
+    }
+
+    updatePage = (json) => {
+        this.setState(state => ({
+            posts: [...state.posts, json]
+            }))
     }
 }
 

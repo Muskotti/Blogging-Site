@@ -200,7 +200,6 @@ export default class CardsTest extends PureComponent {
     async doActionByRel(rel, optionalBody) {
         let link = this.props.links.find((link) => link.rel === rel);
         link.href = this.removeDomainFromUrl(link.href);
-        console.log(link.href);
 
         if (typeof link === 'undefined') {
             throw new Error('Invalid argument provided: rel');
@@ -209,7 +208,6 @@ export default class CardsTest extends PureComponent {
         if (typeof optionalBody === 'undefined') {
             const response = await fetch(link.href, {
                 method: link.type});
-            console.log(response);
             let json;
             try {
                 json = await response.json();

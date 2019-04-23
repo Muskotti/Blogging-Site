@@ -10,7 +10,7 @@ export default class KebabMenu extends PureComponent {
 
     render() {
         const actions = [];
-        actions.push(<NewBlogPost key={'new-blog-post'}/>);
+        actions.push(<NewBlogPost key={'new-blog-post'} link={this.props.link} updatePage={this.props.updatePage}/>);
         actions.push(<Button key={'logout'} flat secondary swapTheming onClick={this.logout}>LogOut</Button>);
 
         return (

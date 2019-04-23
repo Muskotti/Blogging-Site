@@ -7,7 +7,7 @@ export default class BlogPosts extends PureComponent {
     render() {
         if(this.props.data) {
             return (
-                this.props.data.map((item) =>
+                this.props.data.reverse().map((item) =>
                     <div key={item.id} className="md-block-centered md-cell--10" style={{marginBottom: '16px'}}>
                         <CardsTest
                             id={item.id}

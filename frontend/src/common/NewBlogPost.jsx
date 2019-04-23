@@ -23,6 +23,10 @@ export default class NewBlogPost extends PureComponent {
 
     newPost = () => {
         this.hide();
+
+        let link = this.props.link
+        link.href = this.removeDomainFromUrl(link.href);
+
         let obj = {
             "title": this.titleField.current.value,
             "author": this.authorField.current.value,
@@ -30,15 +34,15 @@ export default class NewBlogPost extends PureComponent {
             "time": new Date().getTime()
         }
 
-        fetch(this.props.link.href, {
+        fetch(link.href, {
             method: this.props.link.type,
             headers: {
                 "Content-Type": "application/json"
             },
             body:JSON.stringify(obj)
-        }).then(response => response.json()).then(json => console.log(json));
-        window.location.reload();
-        //TODO: live update
+        })
+            .then(response => response.json())
+            .then(json => this.props.updatePage(json));
     }
 
     render() {
@@ -81,5 +85,19 @@ export default class NewBlogPost extends PureComponent {
                 </DialogContainer>
             </div>
         );
+    }
+
+    removeDomainFromUrl(url) {
+        let indexOfPathBegin = 0;
+        let pathBeginString = '/api';
+
+        for (let i = 0; i < url.length - pathBeginString.length; i++) {
+            if (url.substring(i, i + pathBeginString.length) === pathBeginString) {
+                indexOfPathBegin = i;
+                break;
+            }
+        }
+
+        return url.substring(indexOfPathBegin);
     }
 }
