@@ -63,7 +63,7 @@ export default class CardsTest extends PureComponent {
     getComments = () => {
         this.setState({ isLoading: true });
         this.doActionByRel('comments')
-            .then(data => this.setState({comments: data, isLoading: false}))
+            .then(data => this.setState({comments: data.content, isLoading: false}))
     }
 
     showComments() {
@@ -199,6 +199,8 @@ export default class CardsTest extends PureComponent {
 
     async doActionByRel(rel, optionalBody) {
         let link = this.props.links.find((link) => link.rel === rel);
+        link.href = this.removeDomainFromUrl(link.href);
+        console.log(link.href);
 
         if (typeof link === 'undefined') {
             throw new Error('Invalid argument provided: rel');
@@ -206,7 +208,6 @@ export default class CardsTest extends PureComponent {
 
         if (typeof optionalBody === 'undefined') {
             const response = await fetch(link.href, {
-                mode: "no-cors",
                 method: link.type});
             console.log(response);
             let json;
@@ -219,12 +220,25 @@ export default class CardsTest extends PureComponent {
             return json;
         } else {
             const response = await fetch(link.href, {
-                mode: "no-cors",
                 method: link.type,
                 headers: {"Content-Type": "application/json"},
                 body:JSON.stringify(optionalBody)
             });
             return await response.json();
         }
+    }
+
+    removeDomainFromUrl(url) {
+        let indexOfPathBegin = 0;
+        let pathBeginString = '/api';
+
+        for (let i = 0; i < url.length - pathBeginString.length; i++) {
+            if (url.substring(i, i + pathBeginString.length) === pathBeginString) {
+                indexOfPathBegin = i;
+                break;
+            }
+        }
+
+        return url.substring(indexOfPathBegin);
     }
 }
