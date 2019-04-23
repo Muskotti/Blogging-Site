@@ -151,14 +151,24 @@ class App extends Component {
     }
 
     editPosts = (json) => {
+        let obj = this.state.post
+        if(this.state.post.id === json.id) {
+            obj = json
+        }
+
         let array = [...this.state.posts]
         let index = array.findIndex( item => item.id === json.id)
         array[index] = json
-        this.setState( {posts: array})
+        this.setState( {posts: array, post: obj})
     }
 
     deletePost = (id) => {
-        this.setState({posts: this.state.posts.filter(item => item.id !== id)})
+        let obj = this.state.post
+        if(this.state.post.id === id) {
+            obj = null
+            this.hide()
+        }
+        this.setState({posts: this.state.posts.filter(item => item.id !== id), post: obj})
     }
 
     updatePage = (json) => {

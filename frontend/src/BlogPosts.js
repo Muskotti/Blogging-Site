@@ -35,10 +35,11 @@ export default class BlogPosts extends PureComponent {
                         content={this.props.singlePost.content}
                         time={this.props.singlePost.time}
                         likes={this.props.singlePost.likes}
+                        links={this.props.singlePost.links}
                         likeAction={this.onLikeActionBuilder(this.props.singlePost)}
                         dislikeAction={this.onDislikeActionBuilder(this.props.singlePost)}
                         deletePost={this.props.deletePost}
-                        updatePage={this.props.updatePage}
+                        editPosts={this.props.editPosts}
                     />
                 </div>
             )
