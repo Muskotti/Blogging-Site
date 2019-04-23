@@ -126,10 +126,29 @@ export default class CardsTest extends PureComponent {
     deleteBlog = () => {
         this.doActionByRel('delete')
             .then(jsonResp => {
-                console.log(jsonResp);
-                window.location.reload();
+                this.props.deletePost(this.props.id)
             });
-        //TODO: live delete
+    }
+
+    menu() {
+        if (this.props.deletePost) {
+            return (
+                <MenuButton
+                    id={this.props.id + 'Menu'}
+                    icon
+                    swapTheming
+                    menuItems={[
+                        <ListItem key={1} primaryText="Modify" onClick={this.show}/>,
+                        <ListItem key={2} primaryText="Delete" onClick={this.deleteBlog}/>
+                    ]}
+                    centered
+                >
+                    more_vert
+                </MenuButton>
+            )
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -148,18 +167,7 @@ export default class CardsTest extends PureComponent {
                     <CardActions expander>
                         <p style={{margin: '0px', paddingLeft: '8px', paddingRight: '8px'}}>{this.props.likes + this.state.likes}</p>
                         <Button icon secondary={this.state.disable} swapTheming onClick={this.like}>favorite</Button>
-                        <MenuButton
-                            id={this.props.id + 'Menu'}
-                            icon
-                            swapTheming
-                            menuItems={[
-                                <ListItem key={1} primaryText="Modify" onClick={this.show}/>,
-                                <ListItem key={2} primaryText="Delete" onClick={this.deleteBlog}/>,
-                            ]}
-                            centered
-                        >
-                            more_vert
-                        </MenuButton>
+                        {this.menu()}
                     </CardActions>
                     {this.showComments()}
                 </Card>

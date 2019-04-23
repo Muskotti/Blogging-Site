@@ -7,6 +7,7 @@ export default class BlogPosts extends PureComponent {
     render() {
         if(this.props.data) {
             return (
+                // TODO: make list with times
                 this.props.data.reverse().map((item) =>
                     <div key={item.id} className="md-block-centered md-cell--10" style={{marginBottom: '16px'}}>
                         <CardsTest
@@ -19,6 +20,7 @@ export default class BlogPosts extends PureComponent {
                             links={item.links}
                             likeAction={this.onLikeActionBuilder(item)}
                             dislikeAction={this.onDislikeActionBuilder(item)}
+                            deletePost={this.props.deletePost}
                         />
                     </div>
                 )
@@ -35,6 +37,7 @@ export default class BlogPosts extends PureComponent {
                         likes={this.props.singlePost.likes}
                         likeAction={this.onLikeActionBuilder(this.props.singlePost)}
                         dislikeAction={this.onDislikeActionBuilder(this.props.singlePost)}
+                        deletePost={this.props.deletePost}
                     />
                 </div>
             )
@@ -47,6 +50,7 @@ export default class BlogPosts extends PureComponent {
         return () => {
             fetch(dislikeLinkObject.href, {method:'post', mode:'no-cors'});
         };
+
     }
 
     onLikeActionBuilder(blogPostItem) {

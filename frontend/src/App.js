@@ -69,7 +69,7 @@ class App extends Component {
                                     onChange={this.onChange}/>
                         </div>
                         <div className="md-grid">
-                            <BlogPosts singlePost={this.state.post}/>
+                            <BlogPosts singlePost={this.state.post} deletePost={this.deletePost}/>
                         </div>
                     </div>
                 )
@@ -103,7 +103,7 @@ class App extends Component {
                         <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
                     </div>
                     <div className="md-grid">
-                        <BlogPosts data={this.state.posts}/>
+                        <BlogPosts data={this.state.posts} deletePost={this.deletePost}/>
                     </div>
                 </div>
             )
@@ -147,10 +147,22 @@ class App extends Component {
         }
     }
 
+    deletePost = (id) => {
+        this.setState({posts: this.state.posts.filter(function(item){
+            if(item.id !== id) {
+                return item
+            }
+            })
+        })
+    }
+
     updatePage = (json) => {
-        this.setState(state => ({
-            posts: [...state.posts, json]
-            }))
+        fetch("/api/posts/"+json.id, {mode:"no-cors", method: "GET"})
+            .then(response => response.json())
+            .then(resourceJson => this.setState( prevState => ({
+                posts: [...prevState.posts, resourceJson]
+            })));
+
     }
 }
 
