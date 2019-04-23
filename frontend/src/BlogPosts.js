@@ -7,7 +7,7 @@ export default class BlogPosts extends PureComponent {
     render() {
         if(this.props.data) {
             return (
-                this.props.data.map((item) =>
+                this.props.data.concat().sort((a,b) => new Date(b.time) - new Date(a.time)).map((item) =>
                     <div key={item.id} className="md-block-centered md-cell--10" style={{marginBottom: '16px'}}>
                         <CardsTest
                             id={item.id}

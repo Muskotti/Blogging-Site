@@ -34,19 +34,13 @@ class App extends Component {
             .then(response => response.json())
             .then(resourceJson => this.setState({
                 posts: resourceJson.content,
-            },this.sortList));
+            }));
         fetch("/api/", {mode:"no-cors", method:"GET"})
             .then(response => response.json())
             .then(resourceJson => this.setState({
                 createPostLink: resourceJson.links.find(
                     (link) => link.rel === 'createPost')
             }));
-    }
-
-    sortList = () => {
-        for(let item of this.state.posts) {
-            console.log(item)
-        }
     }
 
     render() {
@@ -158,22 +152,13 @@ class App extends Component {
 
     editPosts = (json) => {
         let array = [...this.state.posts]
-        let index = array.findIndex( item => {
-            if (item.id === json.id) {
-                return item
-            }
-        })
+        let index = array.findIndex( item => item.id === json.id)
         array[index] = json
         this.setState( {posts: array})
     }
 
     deletePost = (id) => {
-        this.setState({posts: this.state.posts.filter(function(item){
-            if(item.id !== id) {
-                return item
-            }
-            })
-        })
+        this.setState({posts: this.state.posts.filter(item => item.id !== id)})
     }
 
     updatePage = (json) => {
@@ -182,8 +167,6 @@ class App extends Component {
             .then(resourceJson => this.setState( prevState => ({
                 posts: [...prevState.posts, resourceJson]
             })))
-            .then(this.sortList);
-
     }
 }
 
