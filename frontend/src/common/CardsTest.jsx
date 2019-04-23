@@ -28,6 +28,7 @@ export default class CardsTest extends PureComponent {
             comments: [],
             isLoading: false,
             visible: false,
+            newComment: '',
         }
     }
 
@@ -93,12 +94,17 @@ export default class CardsTest extends PureComponent {
     makeComment() {
         return(
             <div>
-                <TextField id={'comment-field'} placeholder={"New comment:"} ref={this.textField}/>
+                <TextField id={'comment-field'} placeholder={"New comment:"} ref={this.textField}
+                           value={this.state.newComment} onChange={this.setComment}/>
                 <IconSeparator label={''}>
                     <Button flat secondary swapTheming onClick={this.postComment}>Comment</Button>
                 </IconSeparator>
             </div>
         )
+    }
+
+    setComment = (value) => {
+        this.setState({newComment: value})
     }
 
     postComment = () => {
@@ -107,7 +113,7 @@ export default class CardsTest extends PureComponent {
         };
         this.doActionByRel('addComment', obj)
             .then(dummyArg => this.setState(preState => ({
-                comments: [...preState.comments, dummyArg]
+                comments: [...preState.comments, dummyArg], newComment: ''
             })));
     }
 
