@@ -106,8 +106,9 @@ export default class CardsTest extends PureComponent {
             "text": this.textField.current.value,
         };
         this.doActionByRel('addComment', obj)
-            .then(dummyArg => window.location.reload());
-        //TODO: live update
+            .then(dummyArg => this.setState(preState => ({
+                comments: [...preState.comments, dummyArg]
+            })));
     }
 
     editPost = () => {
