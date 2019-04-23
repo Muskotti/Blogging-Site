@@ -111,6 +111,7 @@ export default class CardsTest extends PureComponent {
     }
 
     editPost = () => {
+        this.hide()
         let obj = {
             "id": this.props.id,
             "title": this.titleField.current.value,
@@ -119,8 +120,7 @@ export default class CardsTest extends PureComponent {
             "time": new Date().getTime()
         };
         this.doActionByRel('edit', obj)
-            .then(dummyArg => window.location.reload());
-        //TODO: live edit
+            .then(dummyArg => this.props.editPosts(dummyArg));
     }
 
     deleteBlog = () => {

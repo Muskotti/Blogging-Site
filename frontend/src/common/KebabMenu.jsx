@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import {MenuButton, Button, ListItem} from 'react-md';
+import {MenuButton, ListItem} from 'react-md';
 import NewBlogPost from "./NewBlogPost";
 
 export default class KebabMenu extends PureComponent {

@@ -34,13 +34,19 @@ class App extends Component {
             .then(response => response.json())
             .then(resourceJson => this.setState({
                 posts: resourceJson.content,
-            }));
+            },this.sortList));
         fetch("/api/", {mode:"no-cors", method:"GET"})
             .then(response => response.json())
             .then(resourceJson => this.setState({
                 createPostLink: resourceJson.links.find(
                     (link) => link.rel === 'createPost')
             }));
+    }
+
+    sortList = () => {
+        for(let item of this.state.posts) {
+            console.log(item)
+        }
     }
 
     render() {
@@ -62,14 +68,16 @@ class App extends Component {
                         <Toolbar
                             themed
                             title="Blogging site"
-                            actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus} link={this.state.createPostLink} updatePage={this.updatePage}/>}
+                            actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}
+                                                link={this.state.createPostLink} updatePage={this.updatePage}/>}
                         />
                         <div className="md-grid">
                             <Search data={this.state.posts} onAutocomplete={this.onAutocomplete}
                                     onChange={this.onChange}/>
                         </div>
                         <div className="md-grid">
-                            <BlogPosts singlePost={this.state.post} deletePost={this.deletePost}/>
+                            <BlogPosts singlePost={this.state.post} deletePost={this.deletePost}
+                                       editPosts={this.editPosts}/>
                         </div>
                     </div>
                 )
@@ -97,13 +105,14 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus} link={this.state.createPostLink} updatePage={this.updatePage}/>}
+                        actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}
+                                            link={this.state.createPostLink} updatePage={this.updatePage}/>}
                     />
                     <div className="md-grid">
                         <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
                     </div>
                     <div className="md-grid">
-                        <BlogPosts data={this.state.posts} deletePost={this.deletePost}/>
+                        <BlogPosts data={this.state.posts} deletePost={this.deletePost} editPosts={this.editPosts}/>
                     </div>
                 </div>
             )
@@ -147,6 +156,17 @@ class App extends Component {
         }
     }
 
+    editPosts = (json) => {
+        let array = [...this.state.posts]
+        let index = array.findIndex( item => {
+            if (item.id === json.id) {
+                return item
+            }
+        })
+        array[index] = json
+        this.setState( {posts: array})
+    }
+
     deletePost = (id) => {
         this.setState({posts: this.state.posts.filter(function(item){
             if(item.id !== id) {
@@ -161,7 +181,8 @@ class App extends Component {
             .then(response => response.json())
             .then(resourceJson => this.setState( prevState => ({
                 posts: [...prevState.posts, resourceJson]
-            })));
+            })))
+            .then(this.sortList);
 
     }
 }
