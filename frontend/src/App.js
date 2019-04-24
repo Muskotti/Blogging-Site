@@ -62,14 +62,16 @@ class App extends Component {
                         <Toolbar
                             themed
                             title="Blogging site"
-                            actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}/>}
+                            actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}
+                                                link={this.state.createPostLink} updatePage={this.updatePage}/>}
                         />
                         <div className="md-grid">
                             <Search data={this.state.posts} onAutocomplete={this.onAutocomplete}
                                     onChange={this.onChange}/>
                         </div>
                         <div className="md-grid">
-                            <BlogPosts singlePost={this.state.post}/>
+                            <BlogPosts singlePost={this.state.post} deletePost={this.deletePost}
+                                       editPosts={this.editPosts}/>
                         </div>
                     </div>
                 )
@@ -97,13 +99,14 @@ class App extends Component {
                     <Toolbar
                         themed
                         title="Blogging site"
-                        actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}/>}
+                        actions={<KebabMenu id="toolbar-kebab-menu" setLoginStatus={this.setLoginStatus}
+                                            link={this.state.createPostLink} updatePage={this.updatePage}/>}
                     />
                     <div className="md-grid">
                         <Search data={this.state.posts} onAutocomplete={this.onAutocomplete} onChange={this.onChange}/>
                     </div>
                     <div className="md-grid">
-                        <BlogPosts data={this.state.posts}/>
+                        <BlogPosts data={this.state.posts} deletePost={this.deletePost} editPosts={this.editPosts}/>
                     </div>
                 </div>
             )
@@ -145,6 +148,35 @@ class App extends Component {
         if(item === '') {
             this.hide()
         }
+    }
+
+    editPosts = (json) => {
+        let obj = this.state.post
+        if(this.state.post.id === json.id) {
+            obj = json
+        }
+
+        let array = [...this.state.posts]
+        let index = array.findIndex( item => item.id === json.id)
+        array[index] = json
+        this.setState( {posts: array, post: obj})
+    }
+
+    deletePost = (id) => {
+        let obj = this.state.post
+        if(this.state.post.id === id) {
+            obj = null
+            this.hide()
+        }
+        this.setState({posts: this.state.posts.filter(item => item.id !== id), post: obj})
+    }
+
+    updatePage = (json) => {
+        fetch("/api/posts/"+json.id, {mode:"no-cors", method: "GET"})
+            .then(response => response.json())
+            .then(resourceJson => this.setState( prevState => ({
+                posts: [...prevState.posts, resourceJson]
+            })))
     }
 }
 

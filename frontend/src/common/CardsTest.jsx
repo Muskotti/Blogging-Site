@@ -28,6 +28,7 @@ export default class CardsTest extends PureComponent {
             comments: [],
             isLoading: false,
             visible: false,
+            newComment: '',
         }
     }
 
@@ -93,7 +94,8 @@ export default class CardsTest extends PureComponent {
     makeComment() {
         return(
             <div>
-                <TextField id={'comment-field'} placeholder={"New comment:"} ref={this.textField}/>
+                <TextField id={'comment-field'} placeholder={"New comment:"} ref={this.textField}
+                           value={this.state.newComment} onChange={this.setComment}/>
                 <IconSeparator label={''}>
                     <Button flat secondary swapTheming onClick={this.postComment}>Comment</Button>
                 </IconSeparator>
@@ -101,16 +103,22 @@ export default class CardsTest extends PureComponent {
         )
     }
 
+    setComment = (value) => {
+        this.setState({newComment: value})
+    }
+
     postComment = () => {
         let obj = {
             "text": this.textField.current.value,
         };
         this.doActionByRel('addComment', obj)
-            .then(dummyArg => window.location.reload());
-        //TODO: live update
+            .then(dummyArg => this.setState(preState => ({
+                comments: [...preState.comments, dummyArg], newComment: ''
+            })));
     }
 
     editPost = () => {
+        this.hide()
         let obj = {
             "id": this.props.id,
             "title": this.titleField.current.value,
@@ -119,17 +127,35 @@ export default class CardsTest extends PureComponent {
             "time": new Date().getTime()
         };
         this.doActionByRel('edit', obj)
-            .then(dummyArg => window.location.reload());
-        //TODO: live edit
+            .then(dummyArg => this.props.editPosts(dummyArg));
     }
 
     deleteBlog = () => {
         this.doActionByRel('delete')
             .then(jsonResp => {
-                console.log(jsonResp);
-                window.location.reload();
+                this.props.deletePost(this.props.id)
             });
-        //TODO: live delete
+    }
+
+    menu() {
+        if (this.props.deletePost) {
+            return (
+                <MenuButton
+                    id={this.props.id + 'Menu'}
+                    icon
+                    swapTheming
+                    menuItems={[
+                        <ListItem key={1} primaryText="Modify" onClick={this.show}/>,
+                        <ListItem key={2} primaryText="Delete" onClick={this.deleteBlog}/>
+                    ]}
+                    centered
+                >
+                    more_vert
+                </MenuButton>
+            )
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -148,18 +174,7 @@ export default class CardsTest extends PureComponent {
                     <CardActions expander>
                         <p style={{margin: '0px', paddingLeft: '8px', paddingRight: '8px'}}>{this.props.likes + this.state.likes}</p>
                         <Button icon secondary={this.state.disable} swapTheming onClick={this.like}>favorite</Button>
-                        <MenuButton
-                            id={this.props.id + 'Menu'}
-                            icon
-                            swapTheming
-                            menuItems={[
-                                <ListItem key={1} primaryText="Modify" onClick={this.show}/>,
-                                <ListItem key={2} primaryText="Delete" onClick={this.deleteBlog}/>,
-                            ]}
-                            centered
-                        >
-                            more_vert
-                        </MenuButton>
+                        {this.menu()}
                     </CardActions>
                     {this.showComments()}
                 </Card>
@@ -200,7 +215,6 @@ export default class CardsTest extends PureComponent {
     async doActionByRel(rel, optionalBody) {
         let link = this.props.links.find((link) => link.rel === rel);
         link.href = this.removeDomainFromUrl(link.href);
-        console.log(link.href);
 
         if (typeof link === 'undefined') {
             throw new Error('Invalid argument provided: rel');
@@ -209,7 +223,6 @@ export default class CardsTest extends PureComponent {
         if (typeof optionalBody === 'undefined') {
             const response = await fetch(link.href, {
                 method: link.type});
-            console.log(response);
             let json;
             try {
                 json = await response.json();
