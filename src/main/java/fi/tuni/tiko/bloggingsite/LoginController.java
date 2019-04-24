@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
  * TODO javadoc
  */
 @RestController
-@Scope("session")
 public class LoginController {
     private UserType userType = UserType.ADMIN;
 
