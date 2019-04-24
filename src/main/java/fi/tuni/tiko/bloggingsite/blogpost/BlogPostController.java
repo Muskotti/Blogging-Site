@@ -28,15 +28,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * An interface for clients to perform CRUD operations related to blog posts.
+ *
+ * @author Anton Höglund
+ */
 @RestController
 @RequestMapping("/api/posts")
 public class BlogPostController {
+
+    /**
+     * Injected BlogPostRepository used to perform CRUD operations to blog posts.
+     */
     @Autowired
     BlogPostRepository postRepository;
 
+    /**
+     * Injected LoginController used to verify the client's privilege.
+     */
     @Autowired
     LoginController loginController;
 
+    /**
+     * Creates a blog post.
+     * @param post the blog post to create.
+     * @return an echo of the blog post resource created.
+     * @throws UnauthorizedException if the client was not authorized to perform this action.
+     */
     @PostMapping("/create")
     public Resource<BlogPost> createBlogPost(@RequestBody BlogPost post) throws UnauthorizedException {
         if (loginController.userIsAdmin()) {
@@ -50,6 +68,10 @@ public class BlogPostController {
         }
     }
 
+    /**
+     * Returns all blog post resources.
+     * @return all blog post resources.
+     */
     @GetMapping("/")
     public Resources<Resource<BlogPost>> findAllBlogPosts() {
         Iterable<BlogPost> postIterable = postRepository.findAll();
@@ -63,6 +85,12 @@ public class BlogPostController {
         return new Resources<>(postResources, selfRel);
     }
 
+    /**
+     * Returns a blog post by id.
+     * @param id the if of the blog post.
+     * @return the blog post.
+     * @throws BlogPostIdNotFoundException if the blog post was not found.
+     */
     @GetMapping("/{id}")
     public Resource<BlogPost> findBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         Optional<BlogPost> post = postRepository.findById(id);
@@ -74,6 +102,13 @@ public class BlogPostController {
         }
     }
 
+    /**
+     * Modifies an already existing blog post, identified by the id in the edited version.
+     * @param edited the edited version of the blog post.
+     * @return the edited blog post.
+     * @throws BlogPostIdNotFoundException if the id in the edited blog post was not found.
+     * @throws UnauthorizedException if the client was not authorized to perform this action.
+     */
     @PutMapping("/edit")
     public Resource<BlogPost> editBlogPostById(@RequestBody BlogPost edited)
             throws BlogPostIdNotFoundException, UnauthorizedException {
@@ -88,6 +123,12 @@ public class BlogPostController {
         }
     }
 
+    /**
+     * Adds a like to the blog post.
+     * @param id the id of the blog post.
+     * @return the blog post that was liked.
+     * @throws BlogPostIdNotFoundException if the blog post was not found by provided id.
+     */
     @PutMapping("/{id}/like")
     public Resource<BlogPost> likeBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         BlogPost post = findBlogPostById(id).getContent();
@@ -95,6 +136,12 @@ public class BlogPostController {
         return createBlogPostResource(postRepository.save(post));
     }
 
+    /**
+     * Removes a like from the blog post.
+     * @param id the id of the blog post.
+     * @return the blog post that was liked.
+     * @throws BlogPostIdNotFoundException if the blog post was not found by provided id.
+     */
     @PutMapping("/{id}/dislike")
     public Resource<BlogPost> dislikeBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException {
         BlogPost post = findBlogPostById(id).getContent();
@@ -102,8 +149,16 @@ public class BlogPostController {
         return createBlogPostResource(postRepository.save(post));
     }
 
+    /**
+     * Deletes a blog post.
+     * @param id the id of the blog post.
+     * @return a ResponseEntity confirming action success.
+     * @throws BlogPostIdNotFoundException if a blog post was not found by provided id.
+     * @throws UnauthorizedException if the client was not authorized to perform this action.
+     */
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<Void> deleteBlogPostById(@PathVariable Long id) throws BlogPostIdNotFoundException, UnauthorizedException {
+    public ResponseEntity<Void> deleteBlogPostById(@PathVariable Long id)
+            throws BlogPostIdNotFoundException, UnauthorizedException {
         if (loginController.userIsAdmin()) {
             BlogPost post = findBlogPostById(id).getContent();
             postRepository.delete(post);
