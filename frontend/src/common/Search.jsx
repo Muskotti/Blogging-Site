@@ -8,20 +8,17 @@ export default class Search extends PureComponent {
         ))
 
         return (
-            <div  className="md-grid">
-                <Autocomplete
-                    id="floating-center-title"
-                    lineDirection="center"
-                    placeholder={"Search"}
-                    resize={{min: 640, max: 1000}}
-                    leftIcon={<FontIcon>search</FontIcon>}
-                    className="md-cell md-cell--bottom "
-                    data={titles}
-                    filter={Autocomplete.caseInsensitiveFilter}
-                    onAutocomplete={this.props.onAutocomplete}
-                    onChange={this.props.onChange}
-                />
-            </div>
-        );
+            <Autocomplete
+                id="floating-center-title"
+                lineDirection="center"
+                placeholder={"Search"}
+                leftIcon={<FontIcon>search</FontIcon>}
+                className="md-cell--12"
+                data={titles}
+                filter={Autocomplete.caseInsensitiveFilter}
+                onAutocomplete={this.props.onAutocomplete}
+                onChange={this.props.onChange}
+            />
+        )
     }
 }

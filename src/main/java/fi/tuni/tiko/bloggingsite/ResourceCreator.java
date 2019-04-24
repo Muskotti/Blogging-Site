@@ -16,12 +16,37 @@ import java.util.Optional;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+/**
+ * A class with generates Resources for RestControllers to return.
+ *
+ * @author Anton Höglund
+ */
 public class ResourceCreator {
+
+    /**
+     * Constant value for HTTP method GET.
+     */
     private final static String GET  = "GET";
+
+    /**
+     * Constant value for HTTP method PUT.
+     */
     private final static String PUT  = "PUT";
+
+    /**
+     * Constant value for HTTP method POST.
+     */
     private final static String POST = "POST";
+
+    /**
+     * Constant value for HTTP method DELETE.
+     */
     private final static String DEL  = "DELETE";
 
+    /**
+     * Returns resources for requests to the API root.
+     * @return resources for requests to the API root.
+     */
     public static Resources<Object> createApiRootResource() {
         Link selfRel = linkTo(methodOn(ApiController.class).getNonInferableLinks())
                 .withSelfRel()
@@ -47,6 +72,11 @@ public class ResourceCreator {
         }
     }
 
+    /**
+     * Returns the resources related to a blog post.
+     * @param post the blog post which the resources will be related to.
+     * @return the resources related to a blog post.
+     */
     public static Resource<BlogPost> createBlogPostResource(BlogPost post) {
         Link selfRel = linkTo(methodOn(BlogPostController.class).findBlogPostById(post.getId()))
                 .withSelfRel()
@@ -94,6 +124,11 @@ public class ResourceCreator {
         return new Resource<>(post, links);
     }
 
+    /**
+     * Returns the resources related to a comment.
+     * @param comment the comment the resources will be related to.
+     * @return the resources related to a comment.
+     */
     public static Resource<Comment> createCommentResource(Comment comment) {
         Link selfRel = linkTo(methodOn(CommentController.class).
                 findCommentsByIdAndByPostId(comment.getId(), comment.getPost().getId()))
@@ -109,22 +144,33 @@ public class ResourceCreator {
         return new Resource<>(comment, selfRel, relatedPost);
     }
 
-    private static Link[] createLinkArray(Link[] optionalLinks, Link... commonLinks) {
-        Link[] combinedLinks = new Link[optionalLinks.length + commonLinks.length];
+    /**
+     * Creates a combined array of Links from an array of links and varargs Links
+     * @param linkArray the array of links
+     * @param variableLengthLinks the varargs Links
+     * @return the combined array of Links
+     */
+    private static Link[] createLinkArray(Link[] linkArray, Link... variableLengthLinks) {
+        Link[] combinedLinks = new Link[linkArray.length + variableLengthLinks.length];
         int combinedIndex = 0;
 
-        for (int i = 0; i < commonLinks.length; i++) {
-            combinedLinks[i] = commonLinks[i];
+        for (int i = 0; i < variableLengthLinks.length; i++) {
+            combinedLinks[i] = variableLengthLinks[i];
             combinedIndex++;
         }
 
-        for (int i = 0; i < optionalLinks.length; i++) {
-            combinedLinks[combinedIndex++] = optionalLinks[i];
+        for (int i = 0; i < linkArray.length; i++) {
+            combinedLinks[combinedIndex++] = linkArray[i];
         }
 
         return combinedLinks;
     }
 
+    /**
+     * Creates an array of Links from present Links in Optional Links
+     * @param optionalLinks the Optional Links
+     * @return the array of Links.
+     */
     private static Link[] optionalLinkArray(Optional<Link>... optionalLinks) {
         ArrayList<Link> links = new ArrayList<>(optionalLinks.length);
 

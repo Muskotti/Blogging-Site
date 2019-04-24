@@ -29,19 +29,41 @@ import static fi.tuni.tiko.bloggingsite.ResourceCreator.createCommentResource;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+/**
+ * Rest controller which allows a client to find, save, and delete comments.
+ *
+ * @author Anton Höglund
+ */
 @RestController
 @RequestMapping("/api/posts/{postId}/comments")
 public class CommentController {
 
+    /**
+     * The injected CommentRepository used for performing CRUD operations in this controller.
+     */
     @Autowired
     CommentRepository commentRepository;
 
+    /**
+     * The injected BlogPostController used for finding the blog posts the comments are related to.
+     */
     @Autowired
     BlogPostController blogPostController;
 
+    /**
+     * The login controller used to check the client's privilege.
+     */
     @Autowired
     LoginController loginController;
 
+
+    /**
+     * Creates a comment to a blog post.
+     * @param id the id of the blog post the comment will be related to.
+     * @param comment the comment itself.
+     * @return an echo of the created comment resource.
+     * @throws BlogPostIdNotFoundException if a blog post could not be found with given id.
+     */
     @PostMapping("/create")
     public Resource<Comment> saveCommentToBlogPostByPostId(
             @PathVariable(name = "postId") Long id,
@@ -55,6 +77,11 @@ public class CommentController {
         return new Resource<>(createdComment, selfRel);
     }
 
+    /**
+     * Returs comment resources by blog post id.
+     * @param id the id of the blog post.
+     * @return the comment resources.
+     */
     @GetMapping("/")
     public Resources<Resource<Comment>> findCommentsByPostId(
             @PathVariable(name = "postId") Long id) {
@@ -69,6 +96,13 @@ public class CommentController {
         return new Resources<>(commentResources, selfRel);
     }
 
+    /**
+     * Returns a comment by the id of the blog post it's related to, and the id of the comment itself.
+     * @param postId the if of the blog post.
+     * @param commentId the id of the comment.
+     * @return the comment resource.
+     * @throws CommentNotFoundException if the Comment could not be found with given ids.
+     */
     @GetMapping("/{commentId}")
     public Resource<Comment> findCommentsByIdAndByPostId(
             @PathVariable(name = "postId") Long postId,
@@ -82,6 +116,13 @@ public class CommentController {
         }
     }
 
+    /**
+     * Deletes a comment by it's blog post id and comment id.
+     * @param postId the blog post id.
+     * @param commentId the comment id.
+     * @throws UnauthorizedException if the client was not authorized to perform this action.
+     * @throws CommentNotFoundException if the comment to delete could not be found with given ids.
+     */
     @DeleteMapping("/{commentId}/delete")
     public void deleteCommentById(
             @PathVariable(name = "postId") Long postId,
