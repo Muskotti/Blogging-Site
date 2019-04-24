@@ -159,7 +159,7 @@ class App extends Component {
         let array = [...this.state.posts]
         let index = array.findIndex( item => item.id === json.id)
         array[index] = json
-        this.setState( {posts: array, post: obj})
+        this.forceUpdate(() => this.setState( {posts: array, post: obj}));
     }
 
     deletePost = (id) => {
@@ -168,7 +168,7 @@ class App extends Component {
             obj = null
             this.hide()
         }
-        this.setState({posts: this.state.posts.filter(item => item.id !== id), post: obj})
+        this.forceUpdate(() => this.setState({posts: this.state.posts.filter(item => item.id !== id), post: obj}));
     }
 
     updatePage = (json) => {
