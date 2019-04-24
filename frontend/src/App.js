@@ -152,7 +152,7 @@ class App extends Component {
 
     editPosts = (json) => {
         let obj = this.state.post
-        if(this.state.post.id === json.id) {
+        if(obj !== null && obj.id === json.id) {
             obj = json
         }
 
@@ -163,8 +163,8 @@ class App extends Component {
     }
 
     deletePost = (id) => {
-        let obj = this.state.post
-        if(this.state.post.id === id) {
+        let obj = this.state.post;
+        if(obj !== null && obj.id === id) {
             obj = null
             this.hide()
         }
