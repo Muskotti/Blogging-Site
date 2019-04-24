@@ -56,8 +56,19 @@ export default class CardsTest extends PureComponent {
 
     postDate = () => {
         let date = new Date(this.props.time);
+        let monthNames = [
+            "January", "February", "March",
+            "April", "May", "June", "July",
+            "August", "September", "October",
+            "November", "December"
+        ];
+
+        let day = date.getDate();
+        let monthIndex = date.getMonth();
+        let year = date.getFullYear();
+
         return (
-            date.getHours() + ":" + date.getMinutes() + " " + date.getDay() + "." + date.getMonth() + "." + date.getFullYear()
+            date.getHours() + ":" + date.getMinutes() + " - " + day + ' ' + monthNames[monthIndex] + ' ' + year
         )
     }
 
