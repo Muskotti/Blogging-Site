@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fi.tuni.tiko</groupId>
 	<artifactId>bloggingsite</artifactId>
-	<version>r2</version>
+	<version>r3</version>
 	<name>bloggingsite</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -31,9 +31,8 @@
 		</dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
 
         <dependency>
